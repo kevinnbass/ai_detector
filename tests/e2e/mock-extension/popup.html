@@ -1,0 +1,301 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>AI Text Detector</title>
+  <style>
+    body {
+      width: 350px;
+      padding: 20px;
+      font-family: Arial, sans-serif;
+    }
+    .header {
+      text-align: center;
+      margin-bottom: 20px;
+    }
+    .setting-group {
+      margin-bottom: 15px;
+    }
+    label {
+      display: block;
+      margin-bottom: 5px;
+      font-weight: bold;
+    }
+    input[type="checkbox"] {
+      margin-right: 8px;
+    }
+    input[type="number"], input[type="text"] {
+      width: 100%;
+      padding: 5px;
+      border: 1px solid #ccc;
+      border-radius: 4px;
+    }
+    button {
+      background: #4CAF50;
+      color: white;
+      padding: 10px 20px;
+      border: none;
+      border-radius: 4px;
+      cursor: pointer;
+      width: 100%;
+    }
+    button:hover {
+      background: #45a049;
+    }
+    .tabs {
+      display: flex;
+      border-bottom: 1px solid #ccc;
+      margin-bottom: 20px;
+    }
+    .tab {
+      flex: 1;
+      padding: 10px;
+      text-align: center;
+      cursor: pointer;
+      border: none;
+      background: #f1f1f1;
+    }
+    .tab.active {
+      background: #4CAF50;
+      color: white;
+    }
+    .tab-content {
+      display: none;
+    }
+    .tab-content.active {
+      display: block;
+    }
+    .message {
+      padding: 10px;
+      margin: 10px 0;
+      border-radius: 4px;
+      display: none;
+    }
+    .success {
+      background: #d4edda;
+      color: #155724;
+      border: 1px solid #c3e6cb;
+    }
+    .error {
+      background: #f8d7da;
+      color: #721c24;
+      border: 1px solid #f5c6cb;
+    }
+    .status-indicator {
+      display: inline-block;
+      width: 10px;
+      height: 10px;
+      border-radius: 50%;
+      margin-right: 5px;
+    }
+    .status-connected { background: #28a745; }
+    .status-disconnected { background: #dc3545; }
+    .status-testing { background: #ffc107; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <h1>AI Text Detector</h1>
+    <p>Detect AI-generated content on social media</p>
+  </div>
+
+  <div class="tabs">
+    <button class="tab active" data-tab="basic">Basic</button>
+    <button class="tab" data-tab="advanced" data-testid="advanced-settings-tab">Advanced</button>
+  </div>
+
+  <div id="basic-tab" class="tab-content active">
+    <div class="setting-group">
+      <label>
+        <input type="checkbox" data-testid="auto-detect-toggle" checked aria-label="Enable automatic detection">
+        Auto-detect AI content
+      </label>
+    </div>
+
+    <div class="setting-group">
+      <label for="threshold">Detection Threshold</label>
+      <input type="number" 
+             id="threshold" 
+             data-testid="confidence-threshold" 
+             min="0" 
+             max="1" 
+             step="0.1" 
+             value="0.7"
+             aria-label="Set confidence threshold for AI detection">
+    </div>
+
+    <div class="setting-group">
+      <label>
+        <input type="checkbox" data-testid="privacy-mode-toggle" aria-label="Enable privacy mode">
+        Privacy mode (don't analyze sensitive content)
+      </label>
+    </div>
+
+    <button data-testid="save-settings">Save Settings</button>
+  </div>
+
+  <div id="advanced-tab" class="tab-content">
+    <div class="setting-group">
+      <label for="api-endpoint">API Endpoint</label>
+      <input type="text" 
+             id="api-endpoint" 
+             data-testid="api-endpoint" 
+             value="http://localhost:8000"
+             aria-label="Set API endpoint URL">
+    </div>
+
+    <div class="setting-group">
+      <button data-testid="test-connection">
+        <span class="status-indicator status-disconnected" data-testid="connection-indicator"></span>
+        Test Connection
+      </button>
+    </div>
+
+    <div class="setting-group">
+      <label for="batch-size">Batch Processing Size</label>
+      <input type="number" 
+             id="batch-size" 
+             data-testid="batch-size" 
+             min="1" 
+             max="50" 
+             value="10"
+             aria-label="Set batch processing size">
+    </div>
+
+    <div class="setting-group">
+      <label>
+        <input type="checkbox" data-testid="debug-mode-toggle" aria-label="Enable debug mode">
+        Debug mode (show detailed logs)
+      </label>
+    </div>
+
+    <button data-testid="save-settings">Save Advanced Settings</button>
+  </div>
+
+  <div class="message success" data-testid="success-message">
+    Settings saved successfully!
+  </div>
+
+  <div class="message error" data-testid="error-message">
+    Error saving settings. Please try again.
+  </div>
+
+  <div data-testid="connection-status" style="margin-top: 10px; font-size: 12px; color: #666;"></div>
+
+  <div data-testid="main-content" style="margin-top: 20px;">
+    <h2>Statistics</h2>
+    <p data-testid="collected-samples">0 samples collected</p>
+    <p data-testid="detection-count">0 detections performed</p>
+  </div>
+
+  <script>
+    // Tab switching
+    document.querySelectorAll('.tab').forEach(tab => {
+      tab.addEventListener('click', () => {
+        // Remove active class from all tabs and contents
+        document.querySelectorAll('.tab').forEach(t => t.classList.remove('active'));
+        document.querySelectorAll('.tab-content').forEach(tc => tc.classList.remove('active'));
+        
+        // Add active class to clicked tab
+        tab.classList.add('active');
+        
+        // Show corresponding content
+        const tabName = tab.getAttribute('data-tab');
+        document.getElementById(tabName + '-tab').classList.add('active');
+      });
+    });
+
+    // Settings functionality
+    let settings = {
+      autoDetect: true,
+      threshold: 0.7,
+      privacyMode: false,
+      apiEndpoint: 'http://localhost:8000',
+      batchSize: 10,
+      debugMode: false
+    };
+
+    // Load settings on popup open
+    function loadSettings() {
+      document.querySelector('[data-testid="auto-detect-toggle"]').checked = settings.autoDetect;
+      document.querySelector('[data-testid="confidence-threshold"]').value = settings.threshold;
+      document.querySelector('[data-testid="privacy-mode-toggle"]').checked = settings.privacyMode;
+      document.querySelector('[data-testid="api-endpoint"]').value = settings.apiEndpoint;
+      document.querySelector('[data-testid="batch-size"]').value = settings.batchSize;
+      document.querySelector('[data-testid="debug-mode-toggle"]').checked = settings.debugMode;
+    }
+
+    // Save settings
+    function saveSettings() {
+      settings.autoDetect = document.querySelector('[data-testid="auto-detect-toggle"]').checked;
+      settings.threshold = parseFloat(document.querySelector('[data-testid="confidence-threshold"]').value);
+      settings.privacyMode = document.querySelector('[data-testid="privacy-mode-toggle"]').checked;
+      settings.apiEndpoint = document.querySelector('[data-testid="api-endpoint"]').value;
+      settings.batchSize = parseInt(document.querySelector('[data-testid="batch-size"]').value);
+      settings.debugMode = document.querySelector('[data-testid="debug-mode-toggle"]').checked;
+
+      // Show success message
+      showMessage('success', 'Settings saved successfully!');
+      
+      // Simulate saving to chrome.storage
+      if (typeof chrome !== 'undefined' && chrome.storage) {
+        chrome.storage.sync.set({ settings }, () => {
+          console.log('Settings saved to Chrome storage');
+        });
+      }
+    }
+
+    // Test API connection
+    async function testConnection() {
+      const indicator = document.querySelector('[data-testid="connection-indicator"]');
+      const status = document.querySelector('[data-testid="connection-status"]');
+      const endpoint = document.querySelector('[data-testid="api-endpoint"]').value;
+      
+      // Show testing state
+      indicator.className = 'status-indicator status-testing';
+      status.textContent = 'Testing connection...';
+      
+      try {
+        const response = await fetch(endpoint + '/health');
+        if (response.ok) {
+          indicator.className = 'status-indicator status-connected';
+          status.textContent = 'Connected - API server is responding';
+        } else {
+          throw new Error(`HTTP ${response.status}`);
+        }
+      } catch (error) {
+        indicator.className = 'status-indicator status-disconnected';
+        status.textContent = 'Failed - Unable to connect to API server';
+      }
+    }
+
+    // Show message
+    function showMessage(type, text) {
+      const message = document.querySelector(`[data-testid="${type}-message"]`);
+      message.textContent = text;
+      message.style.display = 'block';
+      
+      setTimeout(() => {
+        message.style.display = 'none';
+      }, 3000);
+    }
+
+    // Event listeners
+    document.querySelectorAll('[data-testid="save-settings"]').forEach(button => {
+      button.addEventListener('click', saveSettings);
+    });
+
+    document.querySelector('[data-testid="test-connection"]').addEventListener('click', testConnection);
+
+    // Load initial settings
+    loadSettings();
+
+    // Simulate loading statistics
+    setTimeout(() => {
+      document.querySelector('[data-testid="collected-samples"]').textContent = '5 samples collected';
+      document.querySelector('[data-testid="detection-count"]').textContent = '127 detections performed';
+    }, 1000);
+  </script>
+</body>
+</html>

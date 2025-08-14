@@ -1,0 +1,52 @@
+# Testing Dependencies for AI Detector System
+
+# Core testing framework
+pytest>=7.4.0
+pytest-asyncio>=0.21.1
+pytest-cov>=4.1.0
+pytest-mock>=3.11.1
+pytest-xdist>=3.3.1
+
+# HTTP testing
+pytest-httpx>=0.21.0
+httpx>=0.24.1
+aioresponses>=0.7.4
+
+# Database testing
+pytest-alembic>=0.10.7
+pytest-postgresql>=5.0.0
+
+# Performance testing
+pytest-benchmark>=4.0.0
+pytest-timeout>=2.1.0
+
+# Test data generation
+factory-boy>=3.3.0
+faker>=19.3.0
+
+# Mocking and fixtures
+responses>=0.23.3
+freezegun>=1.2.2
+
+# Code quality in tests
+pytest-flake8>=1.1.1
+pytest-mypy>=0.10.3
+
+# Browser testing (for extension tests)
+playwright>=1.37.0
+pytest-playwright>=0.4.2
+
+# API testing
+tavern>=2.3.4
+
+# Load testing
+locust>=2.16.1
+
+# Test reporting
+pytest-html>=3.2.0
+pytest-json-report>=1.5.0
+allure-pytest>=2.13.2
+
+# Development utilities
+pytest-watch>=4.2.0
+pytest-testmon>=2.0.12

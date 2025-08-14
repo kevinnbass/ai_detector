@@ -1,0 +1,168 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "detection_response.json",
+  "title": "AI Detection Response",
+  "description": "Schema for AI text detection responses from all analyzers",
+  "type": "object",
+  "required": ["request_id", "is_ai_generated", "confidence_score", "processing_time_ms"],
+  "properties": {
+    "request_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]+$",
+      "description": "Matching request identifier"
+    },
+    "is_ai_generated": {
+      "type": "boolean",
+      "description": "Primary detection result"
+    },
+    "confidence_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Confidence in the detection result (0-1)"
+    },
+    "processing_time_ms": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Time taken to process the request"
+    },
+    "detection_details": {
+      "type": "object",
+      "properties": {
+        "method_used": {
+          "type": "string",
+          "enum": ["pattern", "ml", "llm", "ensemble"]
+        },
+        "individual_scores": {
+          "type": "object",
+          "properties": {
+            "pattern_score": {"type": "number", "minimum": 0, "maximum": 1},
+            "ml_score": {"type": "number", "minimum": 0, "maximum": 1},
+            "llm_score": {"type": "number", "minimum": 0, "maximum": 1}
+          }
+        },
+        "detected_patterns": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "pattern_type": {
+                "type": "string",
+                "enum": ["hedging", "formal_language", "structured_format", "contrast_rhetoric", "complexity"]
+              },
+              "matches": {
+                "type": "array",
+                "items": {
+                  "type": "object",
+                  "properties": {
+                    "text": {"type": "string"},
+                    "position": {"type": "integer", "minimum": 0},
+                    "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+                  },
+                  "required": ["text", "position", "confidence"]
+                }
+              },
+              "total_score": {"type": "number", "minimum": 0, "maximum": 1}
+            },
+            "required": ["pattern_type", "matches", "total_score"]
+          }
+        },
+        "reasoning": {
+          "type": "object",
+          "properties": {
+            "primary_indicators": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "supporting_evidence": {
+              "type": "array",
+              "items": {"type": "string"}
+            },
+            "contradictory_evidence": {
+              "type": "array",
+              "items": {"type": "string"}
+            }
+          }
+        }
+      }
+    },
+    "performance_metrics": {
+      "type": "object",
+      "properties": {
+        "memory_used_mb": {"type": "number", "minimum": 0},
+        "cpu_time_ms": {"type": "integer", "minimum": 0},
+        "api_calls_made": {"type": "integer", "minimum": 0},
+        "cache_hit": {"type": "boolean"}
+      }
+    },
+    "error_info": {
+      "type": "object",
+      "properties": {
+        "has_error": {"type": "boolean"},
+        "error_code": {"type": "string"},
+        "error_message": {"type": "string"},
+        "fallback_used": {"type": "boolean"},
+        "partial_result": {"type": "boolean"}
+      },
+      "required": ["has_error"]
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "Response timestamp"
+    },
+    "version": {
+      "type": "string",
+      "pattern": "^\\d+\\.\\d+\\.\\d+$",
+      "description": "Detector version used"
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "request_id": "req_123456789",
+      "is_ai_generated": true,
+      "confidence_score": 0.85,
+      "processing_time_ms": 250,
+      "detection_details": {
+        "method_used": "ensemble",
+        "individual_scores": {
+          "pattern_score": 0.8,
+          "ml_score": 0.75,
+          "llm_score": 0.9
+        },
+        "detected_patterns": [
+          {
+            "pattern_type": "formal_language",
+            "matches": [
+              {
+                "text": "comprehensive analysis demonstrates",
+                "position": 5,
+                "confidence": 0.9
+              }
+            ],
+            "total_score": 0.8
+          }
+        ],
+        "reasoning": {
+          "primary_indicators": [
+            "High formal language density",
+            "Academic writing style",
+            "Structured argumentation"
+          ]
+        }
+      },
+      "performance_metrics": {
+        "memory_used_mb": 12.5,
+        "cpu_time_ms": 200,
+        "api_calls_made": 1,
+        "cache_hit": false
+      },
+      "error_info": {
+        "has_error": false
+      },
+      "timestamp": "2024-01-15T10:30:01Z",
+      "version": "1.0.0"
+    }
+  ]
+}

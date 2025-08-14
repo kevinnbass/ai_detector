@@ -1,0 +1,116 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "detection_request.json",
+  "title": "AI Detection Request",
+  "description": "Schema for AI text detection requests across all components",
+  "type": "object",
+  "required": ["text", "request_id"],
+  "properties": {
+    "text": {
+      "type": "string",
+      "minLength": 1,
+      "maxLength": 50000,
+      "description": "Text content to analyze for AI detection"
+    },
+    "request_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]+$",
+      "minLength": 1,
+      "maxLength": 100,
+      "description": "Unique identifier for the request"
+    },
+    "options": {
+      "type": "object",
+      "properties": {
+        "detection_method": {
+          "type": "string",
+          "enum": ["pattern", "ml", "llm", "ensemble"],
+          "default": "ensemble",
+          "description": "Detection method to use"
+        },
+        "confidence_threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.5,
+          "description": "Minimum confidence score for positive detection"
+        },
+        "include_explanation": {
+          "type": "boolean",
+          "default": false,
+          "description": "Whether to include detection explanation"
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 30000,
+          "default": 10000,
+          "description": "Request timeout in milliseconds"
+        },
+        "context": {
+          "type": "object",
+          "properties": {
+            "platform": {
+              "type": "string",
+              "enum": ["twitter", "x", "facebook", "linkedin", "generic"],
+              "description": "Platform context for detection"
+            },
+            "user_id": {
+              "type": "string",
+              "description": "User identifier (anonymized)"
+            },
+            "timestamp": {
+              "type": "string",
+              "format": "date-time",
+              "description": "When the text was created"
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "source": {
+          "type": "string",
+          "enum": ["extension", "api", "batch", "test"],
+          "description": "Source of the request"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "API version used"
+        },
+        "client_info": {
+          "type": "object",
+          "properties": {
+            "user_agent": {"type": "string"},
+            "extension_id": {"type": "string"},
+            "session_id": {"type": "string"}
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "text": "This comprehensive analysis demonstrates the multifaceted nature of contemporary discourse.",
+      "request_id": "req_123456789",
+      "options": {
+        "detection_method": "ensemble",
+        "confidence_threshold": 0.7,
+        "include_explanation": true,
+        "context": {
+          "platform": "twitter",
+          "timestamp": "2024-01-15T10:30:00Z"
+        }
+      },
+      "metadata": {
+        "source": "extension",
+        "version": "1.0.0"
+      }
+    }
+  ]
+}

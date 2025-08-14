@@ -1,0 +1,355 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "performance_metrics.json",
+  "title": "Performance Metrics",
+  "description": "Schema for performance monitoring and benchmarking data",
+  "type": "object",
+  "required": ["test_run_info", "metrics_summary"],
+  "properties": {
+    "test_run_info": {
+      "type": "object",
+      "required": ["run_id", "start_time", "end_time", "test_type"],
+      "properties": {
+        "run_id": {
+          "type": "string",
+          "pattern": "^[a-zA-Z0-9_-]+$",
+          "description": "Unique test run identifier"
+        },
+        "test_type": {
+          "type": "string",
+          "enum": ["unit_benchmark", "integration_benchmark", "load_test", "stress_test", "regression_test"],
+          "description": "Type of performance test"
+        },
+        "start_time": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Test execution start time"
+        },
+        "end_time": {
+          "type": "string", 
+          "format": "date-time",
+          "description": "Test execution end time"
+        },
+        "duration_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total test duration in milliseconds"
+        },
+        "environment": {
+          "type": "object",
+          "properties": {
+            "platform": {"type": "string"},
+            "os": {"type": "string"},
+            "cpu_cores": {"type": "integer", "minimum": 1},
+            "memory_gb": {"type": "number", "minimum": 0},
+            "python_version": {"type": "string"},
+            "node_version": {"type": "string"},
+            "git_commit": {"type": "string"}
+          }
+        },
+        "configuration": {
+          "type": "object",
+          "properties": {
+            "iterations": {"type": "integer", "minimum": 1},
+            "concurrent_users": {"type": "integer", "minimum": 1},
+            "test_data_size": {"type": "integer", "minimum": 0},
+            "timeout_ms": {"type": "integer", "minimum": 100}
+          }
+        }
+      }
+    },
+    "metrics_summary": {
+      "type": "object",
+      "properties": {
+        "response_time": {
+          "type": "object",
+          "properties": {
+            "min_ms": {"type": "number", "minimum": 0},
+            "max_ms": {"type": "number", "minimum": 0},
+            "avg_ms": {"type": "number", "minimum": 0},
+            "p50_ms": {"type": "number", "minimum": 0},
+            "p95_ms": {"type": "number", "minimum": 0},
+            "p99_ms": {"type": "number", "minimum": 0}
+          },
+          "required": ["min_ms", "max_ms", "avg_ms", "p95_ms"]
+        },
+        "throughput": {
+          "type": "object",
+          "properties": {
+            "requests_per_second": {"type": "number", "minimum": 0},
+            "operations_per_second": {"type": "number", "minimum": 0},
+            "total_operations": {"type": "integer", "minimum": 0},
+            "successful_operations": {"type": "integer", "minimum": 0},
+            "failed_operations": {"type": "integer", "minimum": 0}
+          }
+        },
+        "resource_usage": {
+          "type": "object",
+          "properties": {
+            "memory_usage_mb": {
+              "type": "object",
+              "properties": {
+                "min": {"type": "number", "minimum": 0},
+                "max": {"type": "number", "minimum": 0},
+                "avg": {"type": "number", "minimum": 0},
+                "peak": {"type": "number", "minimum": 0}
+              }
+            },
+            "cpu_usage_percent": {
+              "type": "object",
+              "properties": {
+                "min": {"type": "number", "minimum": 0, "maximum": 100},
+                "max": {"type": "number", "minimum": 0, "maximum": 100},
+                "avg": {"type": "number", "minimum": 0, "maximum": 100}
+              }
+            },
+            "disk_io": {
+              "type": "object",
+              "properties": {
+                "reads_mb": {"type": "number", "minimum": 0},
+                "writes_mb": {"type": "number", "minimum": 0},
+                "total_io_mb": {"type": "number", "minimum": 0}
+              }
+            },
+            "network_io": {
+              "type": "object",
+              "properties": {
+                "bytes_sent": {"type": "integer", "minimum": 0},
+                "bytes_received": {"type": "integer", "minimum": 0},
+                "requests_sent": {"type": "integer", "minimum": 0}
+              }
+            }
+          }
+        },
+        "error_metrics": {
+          "type": "object",
+          "properties": {
+            "error_rate_percent": {"type": "number", "minimum": 0, "maximum": 100},
+            "timeout_count": {"type": "integer", "minimum": 0},
+            "connection_errors": {"type": "integer", "minimum": 0},
+            "server_errors": {"type": "integer", "minimum": 0},
+            "client_errors": {"type": "integer", "minimum": 0},
+            "error_breakdown": {
+              "type": "object",
+              "patternProperties": {
+                "^[A-Z_]+$": {"type": "integer", "minimum": 0}
+              }
+            }
+          }
+        }
+      }
+    },
+    "component_benchmarks": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["component_name", "operation", "metrics"],
+        "properties": {
+          "component_name": {
+            "type": "string",
+            "enum": ["detection_engine", "pattern_matcher", "ml_classifier", "llm_analyzer", "api_client", "data_processor", "cache_manager"],
+            "description": "Component being benchmarked"
+          },
+          "operation": {
+            "type": "string",
+            "description": "Specific operation being measured"
+          },
+          "metrics": {
+            "type": "object",
+            "properties": {
+              "avg_time_ms": {"type": "number", "minimum": 0},
+              "min_time_ms": {"type": "number", "minimum": 0},
+              "max_time_ms": {"type": "number", "minimum": 0},
+              "success_rate": {"type": "number", "minimum": 0, "maximum": 1},
+              "memory_used_mb": {"type": "number", "minimum": 0},
+              "iterations": {"type": "integer", "minimum": 1}
+            },
+            "required": ["avg_time_ms", "success_rate", "iterations"]
+          },
+          "performance_grade": {
+            "type": "string",
+            "enum": ["A", "B", "C", "D", "F"],
+            "description": "Performance grade based on requirements"
+          }
+        }
+      }
+    },
+    "requirement_compliance": {
+      "type": "object",
+      "properties": {
+        "overall_status": {
+          "type": "string",
+          "enum": ["PASS", "FAIL", "WARNING"],
+          "description": "Overall compliance status"
+        },
+        "checks": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-zA-Z_]+$": {
+              "type": "object",
+              "properties": {
+                "requirement": {"type": "string"},
+                "actual_value": {"type": "number"},
+                "expected_value": {"type": "number"},
+                "status": {"type": "string", "enum": ["PASS", "FAIL", "WARNING"]},
+                "margin": {"type": "number"}
+              },
+              "required": ["requirement", "actual_value", "expected_value", "status"]
+            }
+          }
+        },
+        "performance_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 100,
+          "description": "Overall performance score (0-100)"
+        }
+      }
+    },
+    "regression_analysis": {
+      "type": "object",
+      "properties": {
+        "baseline_comparison": {
+          "type": "object",
+          "properties": {
+            "baseline_run_id": {"type": "string"},
+            "baseline_date": {"type": "string", "format": "date-time"},
+            "performance_change": {
+              "type": "object",
+              "properties": {
+                "response_time_change_percent": {"type": "number"},
+                "throughput_change_percent": {"type": "number"},
+                "memory_change_percent": {"type": "number"},
+                "error_rate_change_percent": {"type": "number"}
+              }
+            },
+            "regression_status": {
+              "type": "string",
+              "enum": ["improved", "stable", "minor_regression", "major_regression"],
+              "description": "Performance change classification"
+            }
+          }
+        },
+        "trend_analysis": {
+          "type": "object",
+          "properties": {
+            "measurement_period": {"type": "string"},
+            "data_points": {"type": "integer", "minimum": 1},
+            "trends": {
+              "type": "object",
+              "patternProperties": {
+                "^[a-zA-Z_]+$": {
+                  "type": "object",
+                  "properties": {
+                    "direction": {"type": "string", "enum": ["improving", "stable", "degrading"]},
+                    "slope": {"type": "number"},
+                    "confidence": {"type": "number", "minimum": 0, "maximum": 1}
+                  }
+                }
+              }
+            }
+          }
+        }
+      }
+    },
+    "recommendations": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "properties": {
+          "category": {
+            "type": "string",
+            "enum": ["performance", "scalability", "reliability", "resource_optimization", "architecture"]
+          },
+          "priority": {
+            "type": "string",
+            "enum": ["low", "medium", "high", "critical"]
+          },
+          "title": {"type": "string"},
+          "description": {"type": "string"},
+          "estimated_impact": {"type": "string"},
+          "implementation_effort": {
+            "type": "string",
+            "enum": ["low", "medium", "high"]
+          }
+        },
+        "required": ["category", "priority", "title", "description"]
+      }
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "test_run_info": {
+        "run_id": "perf_2024_01_15_001",
+        "test_type": "load_test", 
+        "start_time": "2024-01-15T10:00:00Z",
+        "end_time": "2024-01-15T10:10:00Z",
+        "duration_ms": 600000,
+        "environment": {
+          "platform": "linux",
+          "os": "Ubuntu 22.04",
+          "cpu_cores": 4,
+          "memory_gb": 16,
+          "python_version": "3.11.0",
+          "node_version": "18.17.0"
+        },
+        "configuration": {
+          "iterations": 1000,
+          "concurrent_users": 10,
+          "test_data_size": 500,
+          "timeout_ms": 30000
+        }
+      },
+      "metrics_summary": {
+        "response_time": {
+          "min_ms": 45,
+          "max_ms": 1250,
+          "avg_ms": 180,
+          "p50_ms": 165,
+          "p95_ms": 450,
+          "p99_ms": 800
+        },
+        "throughput": {
+          "requests_per_second": 25.5,
+          "operations_per_second": 18.2,
+          "total_operations": 1000,
+          "successful_operations": 985,
+          "failed_operations": 15
+        },
+        "resource_usage": {
+          "memory_usage_mb": {
+            "min": 125.5,
+            "max": 180.2,
+            "avg": 145.8,
+            "peak": 180.2
+          },
+          "cpu_usage_percent": {
+            "min": 15.2,
+            "max": 75.6,
+            "avg": 42.8
+          }
+        },
+        "error_metrics": {
+          "error_rate_percent": 1.5,
+          "timeout_count": 8,
+          "server_errors": 5,
+          "client_errors": 2
+        }
+      },
+      "requirement_compliance": {
+        "overall_status": "PASS",
+        "performance_score": 87.5,
+        "checks": {
+          "response_time": {
+            "requirement": "Average response time < 200ms",
+            "actual_value": 180,
+            "expected_value": 200,
+            "status": "PASS",
+            "margin": 20
+          }
+        }
+      }
+    }
+  ]
+}

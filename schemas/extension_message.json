@@ -1,0 +1,182 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "extension_message.json",
+  "title": "Chrome Extension Message Protocol",
+  "description": "Schema for messages between extension components (content script, background, popup)",
+  "type": "object",
+  "required": ["type", "id", "timestamp"],
+  "properties": {
+    "type": {
+      "type": "string",
+      "enum": [
+        "DETECT_TEXT",
+        "DETECTION_RESULT", 
+        "PAGE_ANALYSIS",
+        "SETTINGS_UPDATE",
+        "ERROR",
+        "STATUS_UPDATE",
+        "BATCH_PROCESS",
+        "CACHE_UPDATE",
+        "PERFORMANCE_METRICS",
+        "USER_FEEDBACK"
+      ],
+      "description": "Message type identifier"
+    },
+    "id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]+$",
+      "description": "Unique message identifier"
+    },
+    "timestamp": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Unix timestamp when message was created"
+    },
+    "source": {
+      "type": "string",
+      "enum": ["content_script", "background", "popup", "options", "service_worker"],
+      "description": "Component that sent the message"
+    },
+    "target": {
+      "type": "string",
+      "enum": ["content_script", "background", "popup", "options", "service_worker", "broadcast"],
+      "description": "Intended message recipient"
+    },
+    "payload": {
+      "type": "object",
+      "anyOf": [
+        {
+          "description": "Text detection request payload",
+          "properties": {
+            "text": {"type": "string", "minLength": 1},
+            "element_selector": {"type": "string"},
+            "page_url": {"type": "string", "format": "uri"},
+            "detection_options": {
+              "type": "object",
+              "properties": {
+                "method": {"type": "string", "enum": ["quick", "detailed", "batch"]},
+                "threshold": {"type": "number", "minimum": 0, "maximum": 1}
+              }
+            }
+          }
+        },
+        {
+          "description": "Detection result payload",
+          "properties": {
+            "is_ai_generated": {"type": "boolean"},
+            "confidence_score": {"type": "number", "minimum": 0, "maximum": 1},
+            "element_selector": {"type": "string"},
+            "visual_indicator": {
+              "type": "object",
+              "properties": {
+                "type": {"type": "string", "enum": ["badge", "highlight", "overlay"]},
+                "color": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$"},
+                "text": {"type": "string"}
+              }
+            }
+          }
+        },
+        {
+          "description": "Settings update payload",
+          "properties": {
+            "setting_key": {"type": "string"},
+            "setting_value": {},
+            "scope": {"type": "string", "enum": ["user", "session", "global"]}
+          }
+        },
+        {
+          "description": "Error payload",
+          "properties": {
+            "error_code": {"type": "string"},
+            "error_message": {"type": "string"},
+            "error_details": {"type": "object"},
+            "recovery_suggestion": {"type": "string"}
+          }
+        },
+        {
+          "description": "Performance metrics payload",
+          "properties": {
+            "operation": {"type": "string"},
+            "duration_ms": {"type": "integer", "minimum": 0},
+            "memory_delta_mb": {"type": "number"},
+            "success": {"type": "boolean"}
+          }
+        }
+      ]
+    },
+    "correlation_id": {
+      "type": "string",
+      "description": "ID to correlate request/response pairs"
+    },
+    "priority": {
+      "type": "string",
+      "enum": ["low", "normal", "high", "critical"],
+      "default": "normal",
+      "description": "Message processing priority"
+    },
+    "expires_at": {
+      "type": "integer",
+      "minimum": 0,
+      "description": "Unix timestamp when message expires"
+    },
+    "retry_count": {
+      "type": "integer",
+      "minimum": 0,
+      "default": 0,
+      "description": "Number of retry attempts"
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "tab_id": {"type": "integer"},
+        "frame_id": {"type": "integer"},
+        "user_triggered": {"type": "boolean"},
+        "performance_tracking": {"type": "boolean"}
+      }
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "type": "DETECT_TEXT",
+      "id": "msg_123456",
+      "timestamp": 1705312200000,
+      "source": "content_script",
+      "target": "background",
+      "payload": {
+        "text": "This comprehensive analysis demonstrates sophisticated reasoning capabilities.",
+        "element_selector": "div.tweet-content",
+        "page_url": "https://twitter.com/user/status/123",
+        "detection_options": {
+          "method": "detailed",
+          "threshold": 0.7
+        }
+      },
+      "correlation_id": "corr_789",
+      "priority": "normal",
+      "metadata": {
+        "tab_id": 123,
+        "user_triggered": true
+      }
+    },
+    {
+      "type": "DETECTION_RESULT",
+      "id": "msg_123457",
+      "timestamp": 1705312201000,
+      "source": "background",
+      "target": "content_script",
+      "payload": {
+        "is_ai_generated": true,
+        "confidence_score": 0.85,
+        "element_selector": "div.tweet-content",
+        "visual_indicator": {
+          "type": "badge",
+          "color": "#FF6B35",
+          "text": "AI Generated (85%)"
+        }
+      },
+      "correlation_id": "corr_789",
+      "priority": "normal"
+    }
+  ]
+}

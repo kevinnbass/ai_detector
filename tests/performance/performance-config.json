@@ -1,0 +1,145 @@
+{
+  "log_level": "INFO",
+  "output_dir": "test-results/performance",
+  "run_python_benchmarks": true,
+  "run_javascript_benchmarks": true,
+  "run_system_benchmarks": true,
+  "run_load_tests": true,
+  
+  "performance_requirements": {
+    "detection_time_ms": 100,
+    "api_response_time_ms": 2000,
+    "memory_limit_mb": 50,
+    "throughput_ops_per_sec": 16.7,
+    "error_rate_percent": 1.0,
+    "extension_memory_limit_mb": 50,
+    "ui_update_time_ms": 50,
+    "storage_operation_time_ms": 10
+  },
+  
+  "test_iterations": {
+    "unit_benchmarks": 100,
+    "integration_benchmarks": 50,
+    "load_test_duration_seconds": 60,
+    "stress_test_duration_seconds": 300,
+    "concurrent_users": 10,
+    "batch_sizes": [10, 50, 100],
+    "text_sizes": [100, 500, 1000, 5000]
+  },
+  
+  "alert_thresholds": {
+    "cpu_usage_percent": 80,
+    "memory_usage_percent": 85,
+    "disk_usage_percent": 90,
+    "response_time_ms": 2000,
+    "error_rate_percent": 5,
+    "queue_depth": 1000
+  },
+  
+  "monitoring": {
+    "metrics_retention_hours": 24,
+    "collection_interval_seconds": 1,
+    "alert_checking_interval_seconds": 5,
+    "report_generation_interval_minutes": 60
+  },
+  
+  "notifications": {
+    "alert_email": null,
+    "webhook_url": null,
+    "slack_webhook": null,
+    "enable_console_alerts": true,
+    "alert_cooldown_minutes": 5
+  },
+  
+  "load_test_scenarios": [
+    {
+      "name": "normal_load",
+      "description": "Normal operating load simulation",
+      "concurrent_users": 5,
+      "duration_seconds": 60,
+      "ramp_up_seconds": 10,
+      "operations_per_second": 10
+    },
+    {
+      "name": "peak_load",
+      "description": "Peak usage load simulation",
+      "concurrent_users": 20,
+      "duration_seconds": 120,
+      "ramp_up_seconds": 30,
+      "operations_per_second": 50
+    },
+    {
+      "name": "stress_test",
+      "description": "Stress test to find breaking point",
+      "concurrent_users": 50,
+      "duration_seconds": 300,
+      "ramp_up_seconds": 60,
+      "operations_per_second": 100
+    }
+  ],
+  
+  "benchmark_categories": {
+    "detection": {
+      "enabled": true,
+      "text_samples": [
+        "This is a formal analysis that demonstrates academic rigor and scholarly approach to the subject matter.",
+        "hey just grabbed coffee and it's amazing! totally recommend this place ☕",
+        "The methodology employed in this comprehensive study provides valuable insights into the implications.",
+        "lol that's so funny 😂 can't stop laughing",
+        "Furthermore, it should be mentioned that careful consideration of multiple factors is required.",
+        "omg just saw the cutest dog ever! made my whole day better 🐕❤️"
+      ]
+    },
+    "data_processing": {
+      "enabled": true,
+      "sample_sizes": [10, 50, 100, 500, 1000],
+      "processing_modes": ["single", "batch", "streaming"]
+    },
+    "api_performance": {
+      "enabled": true,
+      "endpoints": ["/detect", "/batch", "/health", "/metrics"],
+      "payload_sizes": ["small", "medium", "large"],
+      "authentication_types": ["none", "bearer", "api_key"]
+    },
+    "extension_performance": {
+      "enabled": true,
+      "test_pages": [
+        "https://twitter.com/mock",
+        "https://x.com/mock",
+        "large_content_page",
+        "infinite_scroll_page"
+      ],
+      "interaction_types": ["page_load", "scroll", "click", "typing"]
+    }
+  },
+  
+  "regression_testing": {
+    "enabled": true,
+    "baseline_file": "test-results/performance/baseline.json",
+    "tolerance_percent": 10,
+    "compare_metrics": [
+      "avg_time_ms",
+      "p95_time_ms", 
+      "throughput_ops_sec",
+      "memory_usage_mb",
+      "error_rate_percent"
+    ]
+  },
+  
+  "reporting": {
+    "generate_html_report": true,
+    "generate_pdf_report": false,
+    "include_charts": true,
+    "include_recommendations": true,
+    "auto_upload_results": false,
+    "results_retention_days": 30
+  },
+  
+  "environment": {
+    "api_base_url": "http://localhost:8000",
+    "mock_server_url": "http://localhost:8080",
+    "database_url": "sqlite:///test_performance.db",
+    "cache_enabled": true,
+    "debug_mode": false
+  }
+}

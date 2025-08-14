@@ -1,0 +1,262 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "training_data.json",
+  "title": "Training Data Format",
+  "description": "Schema for training datasets used in AI detection models",
+  "type": "object",
+  "required": ["dataset_info", "samples"],
+  "properties": {
+    "dataset_info": {
+      "type": "object",
+      "required": ["name", "version", "created_at", "sample_count"],
+      "properties": {
+        "name": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Dataset name"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^\\d+\\.\\d+\\.\\d+$",
+          "description": "Dataset version"
+        },
+        "description": {
+          "type": "string",
+          "description": "Dataset description and purpose"
+        },
+        "created_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Dataset creation timestamp"
+        },
+        "updated_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "Last update timestamp"
+        },
+        "sample_count": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Total number of samples"
+        },
+        "ai_samples": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of AI-generated samples"
+        },
+        "human_samples": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Number of human-written samples"
+        },
+        "source_platforms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["twitter", "x", "facebook", "linkedin", "reddit", "blogs", "academic", "synthetic"]
+          },
+          "description": "Platforms where data was collected"
+        },
+        "collection_method": {
+          "type": "string",
+          "enum": ["manual_labeling", "automated_scraping", "user_submission", "synthetic_generation"],
+          "description": "How the data was collected"
+        },
+        "quality_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Overall dataset quality score"
+        },
+        "validation_status": {
+          "type": "string",
+          "enum": ["pending", "validated", "needs_review", "rejected"],
+          "description": "Dataset validation status"
+        }
+      }
+    },
+    "samples": {
+      "type": "array",
+      "items": {
+        "type": "object",
+        "required": ["id", "text", "label", "confidence"],
+        "properties": {
+          "id": {
+            "type": "string",
+            "pattern": "^[a-zA-Z0-9_-]+$",
+            "description": "Unique sample identifier"
+          },
+          "text": {
+            "type": "string",
+            "minLength": 1,
+            "maxLength": 50000,
+            "description": "Text content to be analyzed"
+          },
+          "label": {
+            "type": "string",
+            "enum": ["ai_generated", "human_written"],
+            "description": "Ground truth label"
+          },
+          "confidence": {
+            "type": "number",
+            "minimum": 0,
+            "maximum": 1,
+            "description": "Labeler confidence in the label"
+          },
+          "metadata": {
+            "type": "object",
+            "properties": {
+              "source_platform": {
+                "type": "string",
+                "enum": ["twitter", "x", "facebook", "linkedin", "reddit", "blogs", "academic", "synthetic"]
+              },
+              "collection_date": {
+                "type": "string",
+                "format": "date-time"
+              },
+              "original_url": {
+                "type": "string",
+                "format": "uri"
+              },
+              "author_info": {
+                "type": "object",
+                "properties": {
+                  "verified": {"type": "boolean"},
+                  "follower_count": {"type": "integer", "minimum": 0},
+                  "account_age_days": {"type": "integer", "minimum": 0}
+                }
+              },
+              "text_features": {
+                "type": "object",
+                "properties": {
+                  "character_count": {"type": "integer", "minimum": 0},
+                  "word_count": {"type": "integer", "minimum": 0},
+                  "sentence_count": {"type": "integer", "minimum": 0},
+                  "avg_word_length": {"type": "number", "minimum": 0},
+                  "readability_score": {"type": "number"},
+                  "sentiment_score": {"type": "number", "minimum": -1, "maximum": 1}
+                }
+              },
+              "linguistic_features": {
+                "type": "object",
+                "properties": {
+                  "formality_score": {"type": "number", "minimum": 0, "maximum": 1},
+                  "complexity_score": {"type": "number", "minimum": 0, "maximum": 1},
+                  "hedging_indicators": {"type": "integer", "minimum": 0},
+                  "modal_verbs": {"type": "integer", "minimum": 0},
+                  "passive_voice_ratio": {"type": "number", "minimum": 0, "maximum": 1}
+                }
+              }
+            }
+          },
+          "annotations": {
+            "type": "array",
+            "items": {
+              "type": "object",
+              "properties": {
+                "annotator_id": {"type": "string"},
+                "annotation_date": {"type": "string", "format": "date-time"},
+                "label": {"type": "string", "enum": ["ai_generated", "human_written"]},
+                "confidence": {"type": "number", "minimum": 0, "maximum": 1},
+                "reasoning": {"type": "string"},
+                "difficulty": {"type": "string", "enum": ["easy", "medium", "hard", "ambiguous"]}
+              },
+              "required": ["annotator_id", "label", "confidence"]
+            }
+          },
+          "validation": {
+            "type": "object",
+            "properties": {
+              "is_validated": {"type": "boolean"},
+              "validation_method": {"type": "string", "enum": ["manual", "automated", "cross_validation"]},
+              "validation_score": {"type": "number", "minimum": 0, "maximum": 1},
+              "consensus_label": {"type": "string", "enum": ["ai_generated", "human_written"]},
+              "annotator_agreement": {"type": "number", "minimum": 0, "maximum": 1}
+            }
+          }
+        }
+      }
+    },
+    "statistics": {
+      "type": "object",
+      "properties": {
+        "label_distribution": {
+          "type": "object",
+          "properties": {
+            "ai_generated": {"type": "integer", "minimum": 0},
+            "human_written": {"type": "integer", "minimum": 0}
+          }
+        },
+        "platform_distribution": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-zA-Z_]+$": {"type": "integer", "minimum": 0}
+          }
+        },
+        "quality_metrics": {
+          "type": "object",
+          "properties": {
+            "avg_confidence": {"type": "number", "minimum": 0, "maximum": 1},
+            "avg_text_length": {"type": "number", "minimum": 0},
+            "validation_rate": {"type": "number", "minimum": 0, "maximum": 1},
+            "annotator_agreement": {"type": "number", "minimum": 0, "maximum": 1}
+          }
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "dataset_info": {
+        "name": "twitter_ai_detection_v1",
+        "version": "1.2.0",
+        "description": "Twitter/X posts labeled for AI detection training",
+        "created_at": "2024-01-01T00:00:00Z",
+        "updated_at": "2024-01-15T12:00:00Z",
+        "sample_count": 1000,
+        "ai_samples": 500,
+        "human_samples": 500,
+        "source_platforms": ["twitter", "x"],
+        "collection_method": "manual_labeling",
+        "quality_score": 0.92,
+        "validation_status": "validated"
+      },
+      "samples": [
+        {
+          "id": "sample_001",
+          "text": "This comprehensive analysis demonstrates the multifaceted nature of contemporary discourse paradigms.",
+          "label": "ai_generated",
+          "confidence": 0.95,
+          "metadata": {
+            "source_platform": "twitter",
+            "collection_date": "2024-01-10T14:30:00Z",
+            "text_features": {
+              "character_count": 95,
+              "word_count": 12,
+              "sentence_count": 1,
+              "avg_word_length": 7.9,
+              "formality_score": 0.9
+            }
+          },
+          "annotations": [
+            {
+              "annotator_id": "annotator_1",
+              "annotation_date": "2024-01-10T15:00:00Z",
+              "label": "ai_generated",
+              "confidence": 0.95,
+              "reasoning": "High formality, academic language patterns, complex vocabulary",
+              "difficulty": "easy"
+            }
+          ],
+          "validation": {
+            "is_validated": true,
+            "validation_method": "manual",
+            "validation_score": 0.95,
+            "consensus_label": "ai_generated"
+          }
+        }
+      ]
+    }
+  ]
+}

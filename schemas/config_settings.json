@@ -1,0 +1,383 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "config_settings.json",
+  "title": "Configuration Settings",
+  "description": "Schema for application configuration settings across all components",
+  "type": "object",
+  "properties": {
+    "detection": {
+      "type": "object",
+      "properties": {
+        "default_method": {
+          "type": "string",
+          "enum": ["pattern", "ml", "llm", "ensemble"],
+          "default": "ensemble",
+          "description": "Default detection method to use"
+        },
+        "confidence_threshold": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "default": 0.5,
+          "description": "Default confidence threshold for positive detection"
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 60000,
+          "default": 10000,
+          "description": "Detection timeout in milliseconds"
+        },
+        "ensemble_weights": {
+          "type": "object",
+          "properties": {
+            "pattern_weight": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.3},
+            "ml_weight": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.3},
+            "llm_weight": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.4}
+          },
+          "additionalProperties": false
+        },
+        "fallback_strategy": {
+          "type": "string",
+          "enum": ["pattern_only", "ml_only", "low_confidence", "disabled"],
+          "default": "pattern_only",
+          "description": "Fallback strategy when primary method fails"
+        },
+        "enable_caching": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable result caching"
+        },
+        "cache_ttl_seconds": {
+          "type": "integer",
+          "minimum": 60,
+          "maximum": 86400,
+          "default": 3600,
+          "description": "Cache time-to-live in seconds"
+        }
+      },
+      "additionalProperties": false
+    },
+    "api": {
+      "type": "object",
+      "properties": {
+        "base_url": {
+          "type": "string",
+          "format": "uri",
+          "default": "http://localhost:8000",
+          "description": "Base API URL"
+        },
+        "version": {
+          "type": "string",
+          "pattern": "^v\\d+$",
+          "default": "v1",
+          "description": "API version to use"
+        },
+        "timeout_ms": {
+          "type": "integer",
+          "minimum": 1000,
+          "maximum": 30000,
+          "default": 15000,
+          "description": "API request timeout"
+        },
+        "retry_attempts": {
+          "type": "integer",
+          "minimum": 0,
+          "maximum": 5,
+          "default": 3,
+          "description": "Number of retry attempts"
+        },
+        "retry_delay_ms": {
+          "type": "integer",
+          "minimum": 100,
+          "maximum": 5000,
+          "default": 1000,
+          "description": "Base retry delay"
+        },
+        "rate_limit": {
+          "type": "object",
+          "properties": {
+            "requests_per_minute": {"type": "integer", "minimum": 1, "default": 60},
+            "burst_size": {"type": "integer", "minimum": 1, "default": 10},
+            "enable_rate_limiting": {"type": "boolean", "default": true}
+          }
+        },
+        "authentication": {
+          "type": "object",
+          "properties": {
+            "api_key": {"type": "string", "description": "API key for authentication"},
+            "auth_method": {"type": "string", "enum": ["api_key", "bearer", "none"], "default": "none"}
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "extension": {
+      "type": "object",
+      "properties": {
+        "auto_detect": {
+          "type": "boolean",
+          "default": true,
+          "description": "Automatically detect AI text on page load"
+        },
+        "visual_indicators": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean", "default": true},
+            "style": {"type": "string", "enum": ["badge", "highlight", "overlay", "subtle"], "default": "badge"},
+            "colors": {
+              "type": "object",
+              "properties": {
+                "ai_detected": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#FF6B35"},
+                "human_detected": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#4CAF50"},
+                "uncertain": {"type": "string", "pattern": "^#[0-9A-Fa-f]{6}$", "default": "#FFC107"}
+              }
+            },
+            "show_confidence": {"type": "boolean", "default": true},
+            "animation_enabled": {"type": "boolean", "default": true}
+          }
+        },
+        "target_platforms": {
+          "type": "array",
+          "items": {
+            "type": "string",
+            "enum": ["twitter.com", "x.com", "facebook.com", "linkedin.com", "all"]
+          },
+          "default": ["twitter.com", "x.com"],
+          "description": "Platforms where detection is active"
+        },
+        "detection_triggers": {
+          "type": "object",
+          "properties": {
+            "on_page_load": {"type": "boolean", "default": true},
+            "on_scroll": {"type": "boolean", "default": false},
+            "on_click": {"type": "boolean", "default": true},
+            "real_time": {"type": "boolean", "default": false},
+            "batch_processing": {"type": "boolean", "default": true}
+          }
+        },
+        "performance": {
+          "type": "object",
+          "properties": {
+            "max_memory_mb": {"type": "integer", "minimum": 10, "maximum": 200, "default": 50},
+            "batch_size": {"type": "integer", "minimum": 1, "maximum": 50, "default": 10},
+            "processing_delay_ms": {"type": "integer", "minimum": 0, "maximum": 5000, "default": 500},
+            "enable_performance_monitoring": {"type": "boolean", "default": true}
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "llm": {
+      "type": "object",
+      "properties": {
+        "provider": {
+          "type": "string",
+          "enum": ["openai", "google", "anthropic", "openrouter"],
+          "default": "google",
+          "description": "LLM provider to use"
+        },
+        "model": {
+          "type": "string",
+          "default": "gemini-2.5-flash-002",
+          "description": "Specific model to use"
+        },
+        "api_key": {
+          "type": "string",
+          "description": "API key for LLM provider"
+        },
+        "base_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Custom API base URL"
+        },
+        "parameters": {
+          "type": "object",
+          "properties": {
+            "temperature": {"type": "number", "minimum": 0, "maximum": 2, "default": 0.3},
+            "max_tokens": {"type": "integer", "minimum": 1, "maximum": 8192, "default": 2000},
+            "top_p": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.95},
+            "frequency_penalty": {"type": "number", "minimum": -2, "maximum": 2, "default": 0}
+          }
+        },
+        "structured_output": {
+          "type": "boolean",
+          "default": true,
+          "description": "Use structured JSON output"
+        },
+        "enable_fallback": {
+          "type": "boolean",
+          "default": true,
+          "description": "Enable fallback to pattern matching"
+        }
+      },
+      "additionalProperties": false
+    },
+    "training": {
+      "type": "object",
+      "properties": {
+        "data_collection": {
+          "type": "object",
+          "properties": {
+            "auto_labeling": {"type": "boolean", "default": false},
+            "human_verification": {"type": "boolean", "default": true},
+            "minimum_confidence": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.8},
+            "batch_size": {"type": "integer", "minimum": 1, "maximum": 1000, "default": 100}
+          }
+        },
+        "model_training": {
+          "type": "object",
+          "properties": {
+            "train_split": {"type": "number", "minimum": 0.1, "maximum": 0.9, "default": 0.8},
+            "validation_split": {"type": "number", "minimum": 0.05, "maximum": 0.3, "default": 0.15},
+            "test_split": {"type": "number", "minimum": 0.05, "maximum": 0.3, "default": 0.05},
+            "epochs": {"type": "integer", "minimum": 1, "maximum": 100, "default": 10},
+            "learning_rate": {"type": "number", "minimum": 0.0001, "maximum": 0.1, "default": 0.001}
+          }
+        },
+        "active_learning": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean", "default": true},
+            "uncertainty_threshold": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.3},
+            "sample_size": {"type": "integer", "minimum": 10, "maximum": 500, "default": 50}
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "monitoring": {
+      "type": "object",
+      "properties": {
+        "logging": {
+          "type": "object",
+          "properties": {
+            "level": {"type": "string", "enum": ["DEBUG", "INFO", "WARNING", "ERROR", "CRITICAL"], "default": "INFO"},
+            "format": {"type": "string", "enum": ["json", "text"], "default": "json"},
+            "output": {"type": "string", "enum": ["console", "file", "both"], "default": "both"},
+            "max_file_size_mb": {"type": "integer", "minimum": 1, "maximum": 1000, "default": 10},
+            "backup_count": {"type": "integer", "minimum": 1, "maximum": 10, "default": 3}
+          }
+        },
+        "metrics": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean", "default": true},
+            "collection_interval_seconds": {"type": "integer", "minimum": 1, "maximum": 3600, "default": 60},
+            "retention_days": {"type": "integer", "minimum": 1, "maximum": 365, "default": 30},
+            "export_format": {"type": "string", "enum": ["prometheus", "json", "csv"], "default": "json"}
+          }
+        },
+        "alerts": {
+          "type": "object",
+          "properties": {
+            "enabled": {"type": "boolean", "default": false},
+            "error_rate_threshold": {"type": "number", "minimum": 0, "maximum": 1, "default": 0.05},
+            "response_time_threshold_ms": {"type": "integer", "minimum": 100, "maximum": 30000, "default": 5000},
+            "notification_channels": {
+              "type": "array",
+              "items": {"type": "string", "enum": ["email", "slack", "webhook"]}
+            }
+          }
+        }
+      },
+      "additionalProperties": false
+    },
+    "security": {
+      "type": "object",
+      "properties": {
+        "data_privacy": {
+          "type": "object",
+          "properties": {
+            "anonymize_data": {"type": "boolean", "default": true},
+            "store_user_data": {"type": "boolean", "default": false},
+            "data_retention_days": {"type": "integer", "minimum": 1, "maximum": 365, "default": 30}
+          }
+        },
+        "api_security": {
+          "type": "object",
+          "properties": {
+            "cors_enabled": {"type": "boolean", "default": true},
+            "allowed_origins": {"type": "array", "items": {"type": "string"}},
+            "csrf_protection": {"type": "boolean", "default": true},
+            "rate_limiting": {"type": "boolean", "default": true}
+          }
+        },
+        "content_security": {
+          "type": "object",
+          "properties": {
+            "sanitize_input": {"type": "boolean", "default": true},
+            "validate_schemas": {"type": "boolean", "default": true},
+            "filter_sensitive_data": {"type": "boolean", "default": true}
+          }
+        }
+      },
+      "additionalProperties": false
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "detection": {
+        "default_method": "ensemble",
+        "confidence_threshold": 0.7,
+        "timeout_ms": 8000,
+        "ensemble_weights": {
+          "pattern_weight": 0.25,
+          "ml_weight": 0.35,
+          "llm_weight": 0.4
+        },
+        "enable_caching": true,
+        "cache_ttl_seconds": 1800
+      },
+      "api": {
+        "base_url": "https://api.ai-detector.com",
+        "version": "v1",
+        "timeout_ms": 10000,
+        "retry_attempts": 2,
+        "rate_limit": {
+          "requests_per_minute": 120,
+          "enable_rate_limiting": true
+        }
+      },
+      "extension": {
+        "auto_detect": true,
+        "visual_indicators": {
+          "enabled": true,
+          "style": "badge",
+          "colors": {
+            "ai_detected": "#FF5722",
+            "human_detected": "#4CAF50"
+          },
+          "show_confidence": true
+        },
+        "target_platforms": ["twitter.com", "x.com"],
+        "performance": {
+          "max_memory_mb": 40,
+          "batch_size": 15
+        }
+      },
+      "llm": {
+        "provider": "google",
+        "model": "gemini-2.5-flash-002",
+        "parameters": {
+          "temperature": 0.2,
+          "max_tokens": 1500
+        },
+        "structured_output": true
+      },
+      "monitoring": {
+        "logging": {
+          "level": "INFO",
+          "format": "json",
+          "output": "both"
+        },
+        "metrics": {
+          "enabled": true,
+          "collection_interval_seconds": 30,
+          "retention_days": 14
+        }
+      }
+    }
+  ]
+}

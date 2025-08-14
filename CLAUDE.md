@@ -21,7 +21,7 @@
 
 ## Git Workflow
 
-**IMPORTANT: Upon completion of each task, you MUST:**
+**IMPORTANT: Upon completion of each task OR each phase, you MUST:**
 
 1. **Add all changes to git staging**
    ```bash
@@ -30,7 +30,7 @@
 
 2. **Create a descriptive commit**
    ```bash
-   git commit -m "feat: [description of completed task]"
+   git commit -m "feat: [description of completed task/phase]"
    ```
    
    Use conventional commit format:
@@ -40,6 +40,7 @@
    - `refactor:` for code refactoring
    - `test:` for test additions/changes
    - `chore:` for maintenance tasks
+   - `phase:` for completed implementation phases
 
 3. **Push to GitHub** (if remote is configured)
    ```bash
@@ -50,6 +51,22 @@
    1. Create a repository on GitHub
    2. Add the remote: `git remote add origin https://github.com/username/repo-name.git`
    3. Push: `git push -u origin main`
+
+## Phase Management
+
+**CONTINUOUS IMPLEMENTATION: When a phase completes, automatically proceed to the next phase without prompting. Execute the entire implementation roadmap/todo list straight through.**
+
+### Phase Completion Actions:
+1. **Commit and push all phase changes**
+2. **Update phase status in IMPLEMENTATION_ROADMAP.md**  
+3. **Automatically begin next phase immediately**
+4. **Continue until entire roadmap is complete**
+
+### No Prompting Between Phases:
+- Do NOT ask for permission to continue to next phase
+- Do NOT wait for user confirmation between phases
+- Execute the full roadmap continuously and systematically
+- Only stop if critical errors occur or roadmap is complete
 
 ### Example Workflow
 

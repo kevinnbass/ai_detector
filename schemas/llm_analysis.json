@@ -1,0 +1,395 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "llm_analysis.json",
+  "title": "LLM Analysis Response",
+  "description": "Schema for structured LLM analysis responses with quantified dimensions",
+  "type": "object",
+  "required": ["analysis_id", "input_text", "ai_probability", "confidence_score", "analysis_dimensions"],
+  "properties": {
+    "analysis_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]+$",
+      "description": "Unique analysis identifier"
+    },
+    "input_text": {
+      "type": "string",
+      "minLength": 1,
+      "description": "Original text that was analyzed"
+    },
+    "ai_probability": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "Overall probability that text is AI-generated (0-1)"
+    },
+    "confidence_score": {
+      "type": "number",
+      "minimum": 0,
+      "maximum": 1,
+      "description": "LLM's confidence in its analysis (0-1)"
+    },
+    "analysis_dimensions": {
+      "type": "object",
+      "required": ["writing_style", "language_patterns", "content_structure", "authenticity_markers"],
+      "properties": {
+        "writing_style": {
+          "type": "object",
+          "required": ["formality_level", "complexity_score", "vocabulary_sophistication"],
+          "properties": {
+            "formality_level": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "How formal the writing style is (0=very informal, 1=very formal)"
+            },
+            "complexity_score": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Syntactic and semantic complexity (0=simple, 1=complex)"
+            },
+            "vocabulary_sophistication": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Sophistication of word choices (0=basic, 1=advanced)"
+            },
+            "tone_consistency": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Consistency of tone throughout text (0=inconsistent, 1=consistent)"
+            },
+            "register_appropriateness": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Appropriateness of language register for context"
+            }
+          }
+        },
+        "language_patterns": {
+          "type": "object",
+          "required": ["hedging_frequency", "modal_verb_usage", "passive_voice_ratio"],
+          "properties": {
+            "hedging_frequency": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Frequency of hedging expressions (0=none, 1=very frequent)"
+            },
+            "modal_verb_usage": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Usage of modal verbs (0=none, 1=very frequent)"
+            },
+            "passive_voice_ratio": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Ratio of passive voice constructions (0=none, 1=all passive)"
+            },
+            "transition_marker_density": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Density of transition markers and connectives"
+            },
+            "repetitive_patterns": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Presence of repetitive linguistic patterns"
+            }
+          }
+        },
+        "content_structure": {
+          "type": "object",
+          "required": ["logical_flow", "topic_coherence", "argument_structure"],
+          "properties": {
+            "logical_flow": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Logical progression of ideas (0=poor flow, 1=excellent flow)"
+            },
+            "topic_coherence": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Coherence around main topics (0=incoherent, 1=highly coherent)"
+            },
+            "argument_structure": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Quality of argument structure (0=poor, 1=excellent)"
+            },
+            "information_density": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Density of meaningful information"
+            },
+            "structural_predictability": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Predictability of structural patterns"
+            }
+          }
+        },
+        "authenticity_markers": {
+          "type": "object",
+          "required": ["personal_experience", "emotional_expression", "conversational_elements"],
+          "properties": {
+            "personal_experience": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Presence of personal experience markers (0=none, 1=abundant)"
+            },
+            "emotional_expression": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Emotional expression and sentiment variability"
+            },
+            "conversational_elements": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Informal, conversational language elements"
+            },
+            "cultural_references": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Presence of cultural references and context"
+            },
+            "spontaneous_language": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Spontaneous, unplanned language patterns"
+            }
+          }
+        },
+        "technical_indicators": {
+          "type": "object",
+          "properties": {
+            "sentence_length_variation": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Variation in sentence lengths"
+            },
+            "punctuation_patterns": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Natural vs artificial punctuation patterns"
+            },
+            "spelling_errors": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Presence of natural spelling variations/errors"
+            },
+            "grammar_perfection": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Unnaturally perfect grammar (higher = more perfect)"
+            },
+            "formatting_consistency": {
+              "type": "number",
+              "minimum": 0,
+              "maximum": 1,
+              "description": "Consistency of formatting and structure"
+            }
+          }
+        }
+      }
+    },
+    "detailed_reasoning": {
+      "type": "object",
+      "properties": {
+        "primary_indicators": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "indicator": {"type": "string"},
+              "weight": {"type": "number", "minimum": 0, "maximum": 1},
+              "evidence": {"type": "string"},
+              "supporting_examples": {
+                "type": "array",
+                "items": {"type": "string"}
+              }
+            },
+            "required": ["indicator", "weight", "evidence"]
+          }
+        },
+        "contradictory_evidence": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "evidence": {"type": "string"},
+              "weight": {"type": "number", "minimum": 0, "maximum": 1},
+              "explanation": {"type": "string"}
+            },
+            "required": ["evidence", "explanation"]
+          }
+        },
+        "uncertainty_factors": {
+          "type": "array",
+          "items": {
+            "type": "object",
+            "properties": {
+              "factor": {"type": "string"},
+              "impact": {"type": "string", "enum": ["low", "medium", "high"]},
+              "description": {"type": "string"}
+            },
+            "required": ["factor", "impact", "description"]
+          }
+        },
+        "conclusion_summary": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Summary of the analysis conclusion"
+        }
+      }
+    },
+    "metadata": {
+      "type": "object",
+      "properties": {
+        "llm_model": {
+          "type": "string",
+          "description": "LLM model used for analysis"
+        },
+        "analysis_timestamp": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When the analysis was performed"
+        },
+        "processing_time_ms": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Time taken for analysis"
+        },
+        "prompt_version": {
+          "type": "string",
+          "description": "Version of the analysis prompt used"
+        },
+        "text_length": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Length of analyzed text in characters"
+        },
+        "language": {
+          "type": "string",
+          "description": "Detected language of the text"
+        },
+        "domain_context": {
+          "type": "string",
+          "enum": ["social_media", "academic", "professional", "creative", "technical", "general"],
+          "description": "Inferred domain context"
+        }
+      }
+    },
+    "quality_assessment": {
+      "type": "object",
+      "properties": {
+        "analysis_completeness": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "How complete the analysis is"
+        },
+        "consistency_score": {
+          "type": "number",
+          "minimum": 0,
+          "maximum": 1,
+          "description": "Internal consistency of the analysis"
+        },
+        "reliability_indicators": {
+          "type": "array",
+          "items": {"type": "string"}
+        },
+        "potential_biases": {
+          "type": "array",
+          "items": {"type": "string"}
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "analysis_id": "llm_analysis_123456",
+      "input_text": "This comprehensive analysis demonstrates the multifaceted nature of contemporary discourse paradigms.",
+      "ai_probability": 0.85,
+      "confidence_score": 0.78,
+      "analysis_dimensions": {
+        "writing_style": {
+          "formality_level": 0.92,
+          "complexity_score": 0.88,
+          "vocabulary_sophistication": 0.90,
+          "tone_consistency": 0.95,
+          "register_appropriateness": 0.85
+        },
+        "language_patterns": {
+          "hedging_frequency": 0.12,
+          "modal_verb_usage": 0.08,
+          "passive_voice_ratio": 0.15,
+          "transition_marker_density": 0.25,
+          "repetitive_patterns": 0.70
+        },
+        "content_structure": {
+          "logical_flow": 0.85,
+          "topic_coherence": 0.80,
+          "argument_structure": 0.75,
+          "information_density": 0.60,
+          "structural_predictability": 0.85
+        },
+        "authenticity_markers": {
+          "personal_experience": 0.05,
+          "emotional_expression": 0.10,
+          "conversational_elements": 0.08,
+          "cultural_references": 0.02,
+          "spontaneous_language": 0.15
+        },
+        "technical_indicators": {
+          "sentence_length_variation": 0.40,
+          "punctuation_patterns": 0.85,
+          "spelling_errors": 0.0,
+          "grammar_perfection": 0.98,
+          "formatting_consistency": 0.95
+        }
+      },
+      "detailed_reasoning": {
+        "primary_indicators": [
+          {
+            "indicator": "High formality and complexity",
+            "weight": 0.8,
+            "evidence": "Academic language with sophisticated vocabulary",
+            "supporting_examples": ["comprehensive analysis", "multifaceted nature", "contemporary discourse paradigms"]
+          }
+        ],
+        "conclusion_summary": "The text shows strong AI-generation patterns with high formality, perfect grammar, and low personal authenticity markers."
+      },
+      "metadata": {
+        "llm_model": "gemini-2.5-flash-002",
+        "analysis_timestamp": "2024-01-15T10:30:00Z",
+        "processing_time_ms": 1200,
+        "prompt_version": "v2.1",
+        "text_length": 95,
+        "language": "en",
+        "domain_context": "academic"
+      }
+    }
+  ]
+}

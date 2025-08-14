@@ -1,0 +1,267 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "$id": "api_error.json",
+  "title": "API Error Response",
+  "description": "Standardized error response schema for all API endpoints",
+  "type": "object",
+  "required": ["error", "timestamp", "request_id"],
+  "properties": {
+    "error": {
+      "type": "object",
+      "required": ["code", "message", "type"],
+      "properties": {
+        "code": {
+          "type": "string",
+          "enum": [
+            "INVALID_REQUEST",
+            "AUTHENTICATION_FAILED", 
+            "AUTHORIZATION_DENIED",
+            "RESOURCE_NOT_FOUND",
+            "RATE_LIMIT_EXCEEDED",
+            "SERVICE_UNAVAILABLE",
+            "INTERNAL_ERROR",
+            "TIMEOUT",
+            "VALIDATION_ERROR",
+            "DETECTION_FAILED",
+            "QUOTA_EXCEEDED",
+            "UNSUPPORTED_FORMAT"
+          ],
+          "description": "Standardized error code"
+        },
+        "message": {
+          "type": "string",
+          "minLength": 1,
+          "description": "Human-readable error message"
+        },
+        "type": {
+          "type": "string",
+          "enum": ["client_error", "server_error", "network_error", "service_error"],
+          "description": "Error category"
+        },
+        "details": {
+          "type": "object",
+          "description": "Additional error details",
+          "properties": {
+            "field_errors": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "field": {"type": "string"},
+                  "value": {},
+                  "message": {"type": "string"},
+                  "code": {"type": "string"}
+                },
+                "required": ["field", "message"]
+              }
+            },
+            "validation_errors": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "path": {"type": "string"},
+                  "constraint": {"type": "string"},
+                  "actual_value": {},
+                  "expected_format": {"type": "string"}
+                }
+              }
+            },
+            "service_errors": {
+              "type": "array",
+              "items": {
+                "type": "object",
+                "properties": {
+                  "service": {"type": "string"},
+                  "error_code": {"type": "string"},
+                  "error_message": {"type": "string"},
+                  "retry_after": {"type": "integer", "minimum": 0}
+                }
+              }
+            }
+          }
+        },
+        "suggestion": {
+          "type": "string",
+          "description": "Suggested action to resolve the error"
+        }
+      }
+    },
+    "request_id": {
+      "type": "string",
+      "pattern": "^[a-zA-Z0-9_-]+$",
+      "description": "Unique request identifier for debugging"
+    },
+    "timestamp": {
+      "type": "string",
+      "format": "date-time",
+      "description": "When the error occurred"
+    },
+    "path": {
+      "type": "string",
+      "description": "API endpoint path where error occurred"
+    },
+    "method": {
+      "type": "string",
+      "enum": ["GET", "POST", "PUT", "PATCH", "DELETE"],
+      "description": "HTTP method used"
+    },
+    "status_code": {
+      "type": "integer",
+      "minimum": 100,
+      "maximum": 599,
+      "description": "HTTP status code"
+    },
+    "retry_info": {
+      "type": "object",
+      "properties": {
+        "retryable": {
+          "type": "boolean",
+          "description": "Whether the request can be retried"
+        },
+        "retry_after": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Seconds to wait before retrying"
+        },
+        "max_retries": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Maximum number of retry attempts"
+        },
+        "backoff_strategy": {
+          "type": "string",
+          "enum": ["exponential", "linear", "fixed"],
+          "description": "Recommended backoff strategy"
+        }
+      }
+    },
+    "rate_limit_info": {
+      "type": "object",
+      "description": "Rate limiting information when applicable",
+      "properties": {
+        "limit": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Rate limit ceiling"
+        },
+        "remaining": {
+          "type": "integer",
+          "minimum": 0,
+          "description": "Remaining requests in current window"
+        },
+        "reset_at": {
+          "type": "string",
+          "format": "date-time",
+          "description": "When rate limit resets"
+        },
+        "window_size": {
+          "type": "integer",
+          "minimum": 1,
+          "description": "Rate limit window in seconds"
+        }
+      }
+    },
+    "debug_info": {
+      "type": "object",
+      "description": "Debug information (only in development mode)",
+      "properties": {
+        "stack_trace": {"type": "string"},
+        "internal_error_id": {"type": "string"},
+        "service_versions": {
+          "type": "object",
+          "patternProperties": {
+            "^[a-zA-Z_]+$": {"type": "string"}
+          }
+        },
+        "performance_metrics": {
+          "type": "object",
+          "properties": {
+            "processing_time_ms": {"type": "integer", "minimum": 0},
+            "memory_used_mb": {"type": "number", "minimum": 0},
+            "external_calls": {"type": "integer", "minimum": 0}
+          }
+        }
+      }
+    },
+    "support_info": {
+      "type": "object",
+      "properties": {
+        "documentation_url": {
+          "type": "string",
+          "format": "uri",
+          "description": "Link to relevant documentation"
+        },
+        "contact_support": {
+          "type": "string",
+          "description": "How to contact support"
+        },
+        "incident_id": {
+          "type": "string",
+          "description": "Incident tracking ID"
+        }
+      }
+    }
+  },
+  "additionalProperties": false,
+  "examples": [
+    {
+      "error": {
+        "code": "VALIDATION_ERROR",
+        "message": "Request validation failed",
+        "type": "client_error",
+        "details": {
+          "field_errors": [
+            {
+              "field": "text",
+              "value": "",
+              "message": "Text field cannot be empty",
+              "code": "REQUIRED"
+            },
+            {
+              "field": "confidence_threshold",
+              "value": 1.5,
+              "message": "Value must be between 0 and 1",
+              "code": "OUT_OF_RANGE"
+            }
+          ]
+        },
+        "suggestion": "Please provide valid text content and ensure confidence_threshold is between 0 and 1"
+      },
+      "request_id": "req_123456789",
+      "timestamp": "2024-01-15T10:30:00Z",
+      "path": "/api/v1/detect",
+      "method": "POST",
+      "status_code": 400,
+      "retry_info": {
+        "retryable": false,
+        "retry_after": 0
+      }
+    },
+    {
+      "error": {
+        "code": "RATE_LIMIT_EXCEEDED",
+        "message": "Too many requests. Rate limit exceeded.",
+        "type": "client_error",
+        "suggestion": "Please wait before making another request or upgrade your plan for higher limits"
+      },
+      "request_id": "req_987654321",
+      "timestamp": "2024-01-15T10:35:00Z",
+      "path": "/api/v1/detect",
+      "method": "POST",
+      "status_code": 429,
+      "retry_info": {
+        "retryable": true,
+        "retry_after": 60,
+        "max_retries": 3,
+        "backoff_strategy": "exponential"
+      },
+      "rate_limit_info": {
+        "limit": 100,
+        "remaining": 0,
+        "reset_at": "2024-01-15T11:00:00Z",
+        "window_size": 3600
+      }
+    }
+  ]
+}

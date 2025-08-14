@@ -1,0 +1,635 @@
+name: CI/CD Pipeline
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main, develop ]
+  schedule:
+    # Run daily at 2 AM UTC for performance monitoring
+    - cron: '0 2 * * *'
+
+env:
+  PYTHON_VERSION: '3.11'
+  NODE_VERSION: '18'
+  PYTEST_ARGS: '--tb=short --disable-warnings'
+
+jobs:
+  # Code Quality and Linting
+  lint-and-format:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-test.txt
+        pip install black isort flake8 mypy pylint
+    
+    - name: Install Node.js dependencies
+      run: npm ci
+    
+    - name: Python code formatting (Black)
+      run: black --check --diff src/ tests/
+    
+    - name: Python import sorting (isort)
+      run: isort --check-only --diff src/ tests/
+    
+    - name: Python linting (flake8)
+      run: flake8 src/ tests/ --max-line-length=100 --extend-ignore=E203,W503
+    
+    - name: Python type checking (mypy)
+      run: mypy src/ --ignore-missing-imports
+    
+    - name: Python advanced linting (pylint)
+      run: pylint src/ --disable=C0111,R0903,W0613 --max-line-length=100
+    
+    - name: JavaScript/TypeScript linting
+      run: npm run lint
+    
+    - name: Check for security vulnerabilities
+      run: |
+        pip install safety bandit
+        safety check
+        bandit -r src/ -f json -o bandit-report.json || true
+    
+    - name: Upload security scan results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: security-reports
+        path: bandit-report.json
+
+  # Unit Tests - Python
+  test-python:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        python-version: ['3.9', '3.10', '3.11']
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python ${{ matrix.python-version }}
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ matrix.python-version }}
+        cache: 'pip'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-test.txt
+    
+    - name: Run Python unit tests
+      run: |
+        python -m pytest tests/python/unit/ \
+          --cov=src \
+          --cov-report=xml \
+          --cov-report=html \
+          --cov-report=term \
+          --cov-fail-under=85 \
+          --junitxml=pytest-results.xml \
+          ${{ env.PYTEST_ARGS }}
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage.xml
+        flags: python,unittests
+        name: python-${{ matrix.python-version }}
+    
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: python-test-results-${{ matrix.python-version }}
+        path: |
+          pytest-results.xml
+          htmlcov/
+          coverage.xml
+
+  # Unit Tests - JavaScript
+  test-javascript:
+    runs-on: ubuntu-latest
+    strategy:
+      matrix:
+        node-version: ['16', '18', '20']
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Node.js ${{ matrix.node-version }}
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ matrix.node-version }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Run JavaScript unit tests
+      run: |
+        npm run test:coverage -- \
+          --ci \
+          --watchAll=false \
+          --testResultsProcessor=jest-junit \
+          --collectCoverageFrom="extension/src/**/*.js" \
+          --coverageReporters=lcov,cobertura,text
+    
+    - name: Upload coverage to Codecov
+      uses: codecov/codecov-action@v3
+      with:
+        file: ./coverage/lcov.info
+        flags: javascript,unittests
+        name: javascript-${{ matrix.node-version }}
+    
+    - name: Upload test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: javascript-test-results-${{ matrix.node-version }}
+        path: |
+          junit.xml
+          coverage/
+
+  # Integration Tests
+  test-integration:
+    runs-on: ubuntu-latest
+    needs: [test-python, test-javascript]
+    
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_PASSWORD: postgres
+          POSTGRES_DB: ai_detector_test
+        options: >-
+          --health-cmd pg_isready
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-test.txt
+    
+    - name: Install Node.js dependencies
+      run: npm ci
+    
+    - name: Start test services
+      run: |
+        # Start API server in background
+        python src/api/server.py &
+        API_PID=$!
+        echo "API_PID=$API_PID" >> $GITHUB_ENV
+        
+        # Start mock server for testing
+        node tests/e2e/mock-server.js &
+        MOCK_PID=$!
+        echo "MOCK_PID=$MOCK_PID" >> $GITHUB_ENV
+        
+        # Wait for services to be ready
+        sleep 10
+    
+    - name: Run integration tests
+      env:
+        DATABASE_URL: postgresql://postgres:postgres@localhost/ai_detector_test
+        API_BASE_URL: http://localhost:8000
+        MOCK_SERVER_URL: http://localhost:8080
+      run: |
+        python -m pytest tests/python/integration/ \
+          --cov=src \
+          --cov-append \
+          --cov-report=xml \
+          --junitxml=integration-results.xml \
+          ${{ env.PYTEST_ARGS }}
+    
+    - name: Cleanup services
+      if: always()
+      run: |
+        kill $API_PID || true
+        kill $MOCK_PID || true
+    
+    - name: Upload integration test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: integration-test-results
+        path: |
+          integration-results.xml
+          coverage.xml
+
+  # End-to-End Tests
+  test-e2e:
+    runs-on: ubuntu-latest
+    needs: [test-integration]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Install Python dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-test.txt
+    
+    - name: Install Node.js dependencies
+      run: npm ci
+    
+    - name: Install Playwright browsers
+      run: npx playwright install --with-deps chromium
+    
+    - name: Start test services
+      run: |
+        python src/api/server.py &
+        API_PID=$!
+        echo "API_PID=$API_PID" >> $GITHUB_ENV
+        
+        node tests/e2e/mock-server.js &
+        MOCK_PID=$!
+        echo "MOCK_PID=$MOCK_PID" >> $GITHUB_ENV
+        
+        sleep 15  # Extended wait for E2E setup
+    
+    - name: Run E2E tests
+      env:
+        API_BASE_URL: http://localhost:8000
+        MOCK_SERVER_URL: http://localhost:8080
+      run: |
+        npm run test:e2e -- \
+          --reporter=html,junit \
+          --output-dir=test-results/e2e
+    
+    - name: Cleanup services
+      if: always()
+      run: |
+        kill $API_PID || true
+        kill $MOCK_PID || true
+    
+    - name: Upload E2E test results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: e2e-test-results
+        path: |
+          test-results/e2e/
+          playwright-report/
+    
+    - name: Upload E2E screenshots and videos
+      uses: actions/upload-artifact@v3
+      if: failure()
+      with:
+        name: e2e-failures
+        path: |
+          test-results/e2e/**/*.png
+          test-results/e2e/**/*.webm
+
+  # Performance Tests
+  test-performance:
+    runs-on: ubuntu-latest
+    needs: [test-integration]
+    if: github.event_name == 'schedule' || contains(github.event.head_commit.message, '[perf]')
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Python
+      uses: actions/setup-python@v4
+      with:
+        python-version: ${{ env.PYTHON_VERSION }}
+        cache: 'pip'
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: |
+        python -m pip install --upgrade pip
+        pip install -r requirements.txt
+        pip install -r requirements-test.txt
+        npm ci
+    
+    - name: Download performance baseline
+      uses: actions/download-artifact@v3
+      continue-on-error: true
+      with:
+        name: performance-baseline
+        path: test-results/baseline/
+    
+    - name: Run performance tests
+      run: |
+        python tests/performance/run_performance_tests.py \
+          --config tests/performance/performance-config.json \
+          --output-dir test-results/performance
+    
+    - name: Analyze performance results
+      run: |
+        python -c "
+        import json
+        import sys
+        from pathlib import Path
+        
+        # Load performance results
+        results_dir = Path('test-results/performance')
+        results_file = next(results_dir.glob('performance_test_report_*.json'), None)
+        
+        if results_file:
+            with open(results_file) as f:
+                results = json.load(f)
+            
+            compliance = results.get('requirement_compliance', {})
+            overall_status = compliance.get('overall_status', 'UNKNOWN')
+            
+            print(f'Performance test status: {overall_status}')
+            
+            if overall_status == 'FAIL':
+                print('Performance requirements not met!')
+                for check_name, check_data in compliance.get('checks', {}).items():
+                    if check_data['status'] == 'FAIL':
+                        print(f'  FAILED: {check_name}')
+                sys.exit(1)
+            else:
+                print('All performance requirements met!')
+        else:
+            print('No performance results found')
+            sys.exit(1)
+        "
+    
+    - name: Upload performance results
+      uses: actions/upload-artifact@v3
+      if: always()
+      with:
+        name: performance-results
+        path: test-results/performance/
+    
+    - name: Update performance baseline
+      if: github.ref == 'refs/heads/main' && success()
+      uses: actions/upload-artifact@v3
+      with:
+        name: performance-baseline
+        path: test-results/performance/
+
+  # Security Scanning
+  security-scan:
+    runs-on: ubuntu-latest
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Run Trivy vulnerability scanner
+      uses: aquasecurity/trivy-action@master
+      with:
+        scan-type: 'fs'
+        scan-ref: '.'
+        format: 'sarif'
+        output: 'trivy-results.sarif'
+    
+    - name: Upload Trivy scan results to GitHub Security tab
+      uses: github/codeql-action/upload-sarif@v2
+      if: always()
+      with:
+        sarif_file: 'trivy-results.sarif'
+    
+    - name: Run CodeQL Analysis
+      uses: github/codeql-action/init@v2
+      with:
+        languages: javascript, python
+    
+    - name: Autobuild
+      uses: github/codeql-action/autobuild@v2
+    
+    - name: Perform CodeQL Analysis
+      uses: github/codeql-action/analyze@v2
+
+  # Build and Package
+  build:
+    runs-on: ubuntu-latest
+    needs: [lint-and-format, test-python, test-javascript]
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Set up Node.js
+      uses: actions/setup-node@v4
+      with:
+        node-version: ${{ env.NODE_VERSION }}
+        cache: 'npm'
+    
+    - name: Install dependencies
+      run: npm ci
+    
+    - name: Build extension
+      run: |
+        npm run build
+        npm run build:dev
+    
+    - name: Package extension
+      run: |
+        cd extension
+        zip -r ../ai-detector-extension.zip . -x "*.git*" "node_modules/*" "*.log"
+    
+    - name: Upload build artifacts
+      uses: actions/upload-artifact@v3
+      with:
+        name: extension-build
+        path: |
+          ai-detector-extension.zip
+          extension/dist/
+
+  # Deployment (Staging)
+  deploy-staging:
+    runs-on: ubuntu-latest
+    needs: [build, test-e2e]
+    if: github.ref == 'refs/heads/develop'
+    environment: staging
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: extension-build
+    
+    - name: Deploy to staging
+      run: |
+        echo "Deploying to staging environment..."
+        # Add actual deployment commands here
+        # This could include:
+        # - Uploading to Chrome Web Store (development version)
+        # - Deploying API to staging server
+        # - Running smoke tests against staging
+    
+    - name: Run smoke tests
+      run: |
+        echo "Running smoke tests against staging..."
+        # Add smoke test commands
+
+  # Deployment (Production)
+  deploy-production:
+    runs-on: ubuntu-latest
+    needs: [build, test-e2e, test-performance]
+    if: github.ref == 'refs/heads/main'
+    environment: production
+    
+    steps:
+    - uses: actions/checkout@v4
+    
+    - name: Download build artifacts
+      uses: actions/download-artifact@v3
+      with:
+        name: extension-build
+    
+    - name: Deploy to production
+      run: |
+        echo "Deploying to production environment..."
+        # Add actual deployment commands here
+        # This could include:
+        # - Publishing to Chrome Web Store
+        # - Deploying API to production servers
+        # - Updating CDN
+        # - Database migrations
+    
+    - name: Run production smoke tests
+      run: |
+        echo "Running smoke tests against production..."
+        # Add production smoke test commands
+    
+    - name: Create release
+      if: success()
+      uses: actions/create-release@v1
+      env:
+        GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+      with:
+        tag_name: v${{ github.run_number }}
+        release_name: Release v${{ github.run_number }}
+        body: |
+          Automated release from main branch
+          
+          Changes included in this release:
+          ${{ github.event.head_commit.message }}
+        draft: false
+        prerelease: false
+
+  # Notification and Reporting
+  notify-results:
+    runs-on: ubuntu-latest
+    needs: [lint-and-format, test-python, test-javascript, test-integration, test-e2e, build]
+    if: always()
+    
+    steps:
+    - name: Determine overall status
+      id: status
+      run: |
+        # Determine overall pipeline status
+        if [[ "${{ needs.lint-and-format.result }}" == "success" && \
+              "${{ needs.test-python.result }}" == "success" && \
+              "${{ needs.test-javascript.result }}" == "success" && \
+              "${{ needs.test-integration.result }}" == "success" && \
+              "${{ needs.test-e2e.result }}" == "success" && \
+              "${{ needs.build.result }}" == "success" ]]; then
+          echo "status=success" >> $GITHUB_OUTPUT
+          echo "message=All CI/CD pipeline checks passed! ✅" >> $GITHUB_OUTPUT
+        else
+          echo "status=failure" >> $GITHUB_OUTPUT
+          echo "message=CI/CD pipeline has failures! ❌" >> $GITHUB_OUTPUT
+        fi
+    
+    - name: Post to Slack (if configured)
+      if: always()
+      uses: 8398a7/action-slack@v3
+      with:
+        status: ${{ steps.status.outputs.status }}
+        channel: '#ci-cd'
+        username: 'GitHub Actions'
+        text: |
+          ${{ steps.status.outputs.message }}
+          
+          Repository: ${{ github.repository }}
+          Branch: ${{ github.ref_name }}
+          Commit: ${{ github.sha }}
+          Author: ${{ github.actor }}
+          
+          Workflow: ${{ github.workflow }}
+          Run: ${{ github.run_number }}
+      env:
+        SLACK_WEBHOOK_URL: ${{ secrets.SLACK_WEBHOOK_URL }}
+
+  # Cleanup
+  cleanup:
+    runs-on: ubuntu-latest
+    needs: [notify-results]
+    if: always()
+    
+    steps:
+    - name: Clean up old artifacts
+      uses: actions/github-script@v6
+      with:
+        script: |
+          const artifacts = await github.rest.actions.listWorkflowRunArtifacts({
+            owner: context.repo.owner,
+            repo: context.repo.repo,
+            run_id: context.runId,
+          });
+          
+          // Keep artifacts for 30 days, then clean up
+          const thirtyDaysAgo = new Date();
+          thirtyDaysAgo.setDate(thirtyDaysAgo.getDate() - 30);
+          
+          for (const artifact of artifacts.data.artifacts) {
+            const createdAt = new Date(artifact.created_at);
+            if (createdAt < thirtyDaysAgo) {
+              await github.rest.actions.deleteArtifact({
+                owner: context.repo.owner,
+                repo: context.repo.repo,
+                artifact_id: artifact.id,
+              });
+            }
+          }
