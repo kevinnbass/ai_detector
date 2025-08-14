@@ -1,0 +1,39 @@
+{
+  "name": "gpt4o-detector-extension",
+  "version": "2.1.0",
+  "description": "Chrome extension for detecting GPT-4o generated text on X/Twitter",
+  "scripts": {
+    "build": "npm run clean && npm run copy && npm run minify",
+    "clean": "rimraf dist",
+    "copy": "npm run copy:manifest && npm run copy:html && npm run copy:assets",
+    "copy:manifest": "copyfiles -f src/manifest.json dist/",
+    "copy:html": "copyfiles -f src/popup/*.html dist/popup/",
+    "copy:assets": "copyfiles -u 1 assets/**/* dist/",
+    "minify": "npm run minify:js && npm run minify:css",
+    "minify:js": "terser src/**/*.js -o dist/",
+    "minify:css": "cleancss -o dist/popup/popup.css src/popup/popup.css && cleancss -o dist/content/styles.css src/content/styles.css",
+    "watch": "nodemon --watch src --ext js,css,html,json --exec npm run build",
+    "test": "jest",
+    "test:watch": "jest --watch",
+    "lint": "eslint src/**/*.js",
+    "lint:fix": "eslint src/**/*.js --fix",
+    "package": "npm run build && cd dist && bestzip ../releases/extension-v$npm_package_version.zip *"
+  },
+  "devDependencies": {
+    "bestzip": "^2.2.1",
+    "clean-css-cli": "^5.6.2",
+    "copyfiles": "^2.4.1",
+    "eslint": "^8.56.0",
+    "eslint-config-standard": "^17.1.0",
+    "jest": "^29.7.0",
+    "nodemon": "^3.0.2",
+    "rimraf": "^5.0.5",
+    "terser": "^5.26.0"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=16.0.0"
+  },
+  "author": "AI Detector Team",
+  "license": "MIT"
+}
