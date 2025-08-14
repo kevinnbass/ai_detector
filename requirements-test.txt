@@ -50,3 +50,10 @@ allure-pytest>=2.13.2
 # Development utilities
 pytest-watch>=4.2.0
 pytest-testmon>=2.0.12
+
+# Monitoring and observability
+psutil>=5.9.5
+opentelemetry-api>=1.19.0
+opentelemetry-sdk>=1.19.0
+opentelemetry-instrumentation>=0.40b0
+prometheus-client>=0.17.1
