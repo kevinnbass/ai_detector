@@ -22,10 +22,15 @@
    - `test:` for test additions/changes
    - `chore:` for maintenance tasks
 
-3. **Push to GitHub**
+3. **Push to GitHub** (if remote is configured)
    ```bash
    git push origin main
    ```
+   
+   **Note:** If no remote is configured, inform the user to:
+   1. Create a repository on GitHub
+   2. Add the remote: `git remote add origin https://github.com/username/repo-name.git`
+   3. Push: `git push -u origin main`
 
 ### Example Workflow
 
