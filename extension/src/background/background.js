@@ -1,4 +1,5 @@
-// Import Gemini analyzer
+// Import message bus and Gemini analyzer
+importScripts('../shared/message-bus.js');
 importScripts('gemini-analyzer.js');
 
 // Background service worker state
@@ -6,6 +7,100 @@ let isEnabled = true;
 let analysisMode = 'quick';
 let analysisQueue = [];
 let processingQueue = false;
+
+// Initialize message bus
+console.log('AI Detector: Background script loaded');
+messageBus.initialize().then(() => {
+    console.log('Background: Message bus initialized');
+    registerMessageBusHandlers();
+}).catch(error => {
+    console.error('Background: Failed to initialize message bus:', error);
+});
+
+/**
+ * Register message bus handlers
+ */
+function registerMessageBusHandlers() {
+    // Detection request handler (replaces old analyzeTweet)
+    messageBus.register('DETECT_TEXT', async (data, message) => {
+        const { text, options = {} } = data;
+        try {
+            const result = await geminiAnalyzer.analyzeTweet(text, options);
+            messageBus.emit('detection:completed', { text, result, requestId: message.requestId });
+            return { success: true, result };
+        } catch (error) {
+            const fallback = await getFallbackAnalysis(text);
+            messageBus.emit('detection:failed', { text, error: error.message, fallback });
+            return { success: false, error: error.message, fallback };
+        }
+    });
+    
+    // Settings handlers
+    messageBus.register('GET_SETTINGS', async () => {
+        const settings = await chrome.storage.sync.get(['settings']);
+        const hasApiKey = await chrome.storage.local.get(['geminiApiKey']);
+        return { 
+            settings: settings.settings || {}, 
+            hasApiKey: !!hasApiKey.geminiApiKey 
+        };
+    });
+    
+    messageBus.register('SET_SETTINGS', async (data) => {
+        const { settings } = data;
+        await chrome.storage.sync.set({ settings });
+        isEnabled = settings.enabled !== false;
+        analysisMode = settings.analysisMode || 'quick';
+        messageBus.emit('settings:updated', settings);
+        return { success: true };
+    });
+    
+    // Statistics handler
+    messageBus.register('GET_STATISTICS', async () => {
+        const stats = await chrome.storage.local.get(['analysisStats']);
+        const cacheStats = geminiAnalyzer.getCacheStats();
+        return { stats: stats.analysisStats || {}, cacheStats };
+    });
+    
+    // API key handler
+    messageBus.register('SET_API_KEY', async (data) => {
+        const { apiKey } = data;
+        try {
+            await geminiAnalyzer.setApiKey(apiKey);
+            const testResult = await geminiAnalyzer.analyzeTweet(
+                'This is a test tweet to verify the API key works correctly.',
+                { quick: true }
+            );
+            messageBus.emit('api_key:verified', { apiKey: apiKey.substring(0, 10) + '...' });
+            return { success: true, message: 'API key set and verified', testResult };
+        } catch (error) {
+            return { success: false, error: `API key verification failed: ${error.message}` };
+        }
+    });
+    
+    // Tab analysis handler
+    messageBus.register('ANALYZE_TAB', async (data) => {
+        const { tabId, options = {} } = data;
+        try {
+            const result = await messageBus.sendToTab(tabId, 'SCAN_PAGE', options);
+            return { success: true, result };
+        } catch (error) {
+            return { success: false, error: error.message };
+        }
+    });
+    
+    // Health check
+    messageBus.register('HEALTH_CHECK', () => {
+        return {
+            enabled: isEnabled,
+            analysisMode,
+            queueLength: analysisQueue.length,
+            processing: processingQueue,
+            uptime: Date.now() - (chrome.runtime.getManifest().start_time || 0)
+        };
+    });
+    
+    console.log('Background: Message bus handlers registered');
+}
 
 chrome.runtime.onInstalled.addListener(async (details) => {
   if (details.reason === 'install') {
