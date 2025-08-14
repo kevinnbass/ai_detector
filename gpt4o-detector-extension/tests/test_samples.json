@@ -1,0 +1,109 @@
+{
+  "gpt4o_samples": [
+    {
+      "text": "While artificial intelligence continues to evolve rapidly, it's important to note that there are both advantages and disadvantages to consider. On one hand, AI can significantly boost productivity and efficiency across various industries. On the other hand, job displacement remains a valid concern that deserves careful consideration.",
+      "confidence_expected": 0.8,
+      "patterns_expected": ["contrast_rhetoric", "balanced_presentation", "excessive_qualifiers"]
+    },
+    {
+      "text": "Climate change presents numerous challenges that require immediate attention. Firstly, rising sea levels threaten coastal communities worldwide. Secondly, extreme weather events are becoming more frequent and severe. Thirdly, biodiversity loss accelerates at an unprecedented rate. However, technological solutions are emerging that could help mitigate these issues.",
+      "confidence_expected": 0.75,
+      "patterns_expected": ["structured_lists", "formal_in_casual", "contrast_rhetoric"]
+    },
+    {
+      "text": "The blockchain technology debate is fascinating and multifaceted. Not simply hype, but a genuinely transformative innovation with real-world applications. Nevertheless, scalability issues persist and need addressing. That said, the potential applications are vast and varied, ranging from supply chain management to digital identity verification.",
+      "confidence_expected": 0.7,
+      "patterns_expected": ["contrast_rhetoric", "caveats", "balanced_presentation"]
+    },
+    {
+      "text": "Remote work has fundamentally altered the professional landscape. It's worth noting that this shift brings both benefits and drawbacks. Generally speaking, employees appreciate the flexibility and reduced commuting time. However, collaboration challenges and potential isolation issues cannot be ignored.",
+      "confidence_expected": 0.72,
+      "patterns_expected": ["excessive_qualifiers", "balanced_presentation", "excessive_hedging"]
+    },
+    {
+      "text": "Cryptocurrency adoption presents interesting possibilities. Essentially, it represents a paradigm shift in how we think about money and financial transactions. Nevertheless, volatility remains a significant concern. Keep in mind that regulatory frameworks are still evolving.",
+      "confidence_expected": 0.68,
+      "patterns_expected": ["explanatory_style", "caveats", "excessive_qualifiers"]
+    }
+  ],
+  "human_samples": [
+    {
+      "text": "AI is moving way too fast tbh. like every week there's something new and i can barely keep up anymore. feels like we're heading straight for skynet territory 😅",
+      "confidence_expected": 0.1,
+      "patterns_expected": []
+    },
+    {
+      "text": "climate change is real and we need to act NOW. stop debating and start doing something about it!! the planet is literally on fire 🔥",
+      "confidence_expected": 0.15,
+      "patterns_expected": []
+    },
+    {
+      "text": "blockchain = overhyped nonsense. change my mind 🤷‍♂️ most of these 'innovations' are just solutions looking for problems",
+      "confidence_expected": 0.05,
+      "patterns_expected": []
+    },
+    {
+      "text": "working from home is the best thing that happened during covid. never going back to the office if i can help it. productivity through the roof when you don't have karen breathing down your neck",
+      "confidence_expected": 0.2,
+      "patterns_expected": []
+    },
+    {
+      "text": "crypto crashed again lol. told you it was a bubble. my neighbor keeps asking me about bitcoin and i'm like dude just put your money in index funds",
+      "confidence_expected": 0.1,
+      "patterns_expected": []
+    }
+  ],
+  "edge_cases": [
+    {
+      "text": "Short tweet.",
+      "confidence_expected": 0,
+      "description": "Very short text"
+    },
+    {
+      "text": "",
+      "confidence_expected": 0,
+      "description": "Empty text"
+    },
+    {
+      "text": "🎉🎉🎉 Amazing news! 🚀✨ #excited #AI",
+      "confidence_expected": 0,
+      "description": "Mostly emojis and hashtags"
+    },
+    {
+      "text": "Check out this link: https://example.com/article #tech #innovation",
+      "confidence_expected": 0,
+      "description": "Mostly links and hashtags"
+    },
+    {
+      "text": "Perhaps it might be possible that this could potentially seem to maybe indicate that there might possibly be some potential advantages and disadvantages to consider. It's important to note that we should keep in mind the various factors involved.",
+      "confidence_expected": 0.95,
+      "description": "Extreme GPT-4o patterns"
+    }
+  ],
+  "multilingual_samples": [
+    {
+      "text": "L'intelligence artificielle évolue rapidement. Il est important de noter qu'il y a des avantages et des inconvénients à considérer.",
+      "language": "French",
+      "confidence_expected": 0.4,
+      "description": "French text with some GPT-4o patterns"
+    },
+    {
+      "text": "La tecnología blockchain es fascinante. No es simplemente hype, sino una innovación genuinamente transformadora.",
+      "language": "Spanish", 
+      "confidence_expected": 0.3,
+      "description": "Spanish text with contrast pattern"
+    }
+  ],
+  "mixed_samples": [
+    {
+      "text": "AI development is accelerating rapidly, and it's important to note the implications. However, my personal take is that we're overthinking this whole thing. Like, just build cool stuff and see what happens 🤷‍♂️",
+      "confidence_expected": 0.4,
+      "description": "Mix of GPT-4o formal style and human casual style"
+    },
+    {
+      "text": "The advantages of renewable energy are clear: 1) Environmental benefits 2) Economic sustainability. But honestly? Solar panels on every roof would be sick. The future is bright (pun intended) ☀️",
+      "confidence_expected": 0.35,
+      "description": "Formal list structure with casual human commentary"
+    }
+  ]
+}

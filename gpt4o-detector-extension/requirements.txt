@@ -1,0 +1,18 @@
+# Python dependencies for pattern mining and testing
+numpy>=1.21.0
+pandas>=1.3.0
+scikit-learn>=1.0.0
+nltk>=3.6.0
+spacy>=3.4.0
+
+# Optional: for enhanced text processing
+textstat>=0.7.0
+textblob>=0.17.0
+
+# For API integration (optional)
+requests>=2.25.0
+openai>=1.0.0  # If using OpenAI API for mining
+
+# Development and testing
+pytest>=6.0.0
+pytest-cov>=3.0.0

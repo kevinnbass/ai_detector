@@ -1,0 +1,41 @@
+{
+  "name": "gpt4o-detector-extension",
+  "version": "1.0.0",
+  "description": "Chrome extension that detects GPT-4o generated text on X (Twitter)",
+  "main": "extension/manifest.json",
+  "scripts": {
+    "test": "cd tests && python test_detector.py",
+    "mine": "cd mining && python gpt4o_miner.py",
+    "detect": "cd mining && python detector.py",
+    "build": "echo 'No build process required - load extension directly'",
+    "package": "zip -r gpt4o-detector-extension.zip extension/ -x '*.DS_Store' '*/.git/*'",
+    "validate": "web-ext lint --source-dir extension/",
+    "start": "web-ext run --source-dir extension/ --target chromium"
+  },
+  "keywords": [
+    "chrome-extension",
+    "gpt-detection",
+    "ai-detection",
+    "twitter",
+    "x.com",
+    "text-analysis",
+    "pattern-recognition"
+  ],
+  "author": "Your Name",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/yourusername/gpt4o-detector-extension"
+  },
+  "devDependencies": {
+    "web-ext": "^7.0.0"
+  },
+  "dependencies": {},
+  "engines": {
+    "node": ">=14.0.0"
+  },
+  "browserslist": [
+    "Chrome >= 88",
+    "Edge >= 88"
+  ]
+}

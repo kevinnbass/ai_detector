@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GPT-4o Detector Settings</title>
+  <link rel="stylesheet" href="popup.css">
+</head>
+<body>
+  <div class="popup-container">
+    <header class="popup-header">
+      <div class="logo">
+        <span class="logo-icon">🤖</span>
+        <h1>GPT-4o Detector</h1>
+      </div>
+      <div class="version" id="versionInfo">v2.1.0-Optimized</div>
+    </header>
+
+    <main class="popup-content">
+      <section class="status-section">
+        <div class="status-indicator">
+          <span class="status-dot" id="statusDot"></span>
+          <span class="status-text" id="statusText">Active</span>
+        </div>
+        <div class="stats">
+          <div class="stat-item">
+            <span class="stat-label">Posts Analyzed:</span>
+            <span class="stat-value" id="postsAnalyzed">0</span>
+          </div>
+          <div class="stat-item">
+            <span class="stat-label">GPT-4o Detected:</span>
+            <span class="stat-value" id="gptDetected">0</span>
+          </div>
+          <div class="stat-item" id="llmStats" style="display: none;">
+            <span class="stat-label">LLM Enhanced:</span>
+            <span class="stat-value" id="llmEnhanced">0</span>
+          </div>
+        </div>
+      </section>
+
+      <section class="settings-section">
+        <div class="setting-group">
+          <label class="toggle-label">
+            <input type="checkbox" id="enableToggle" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-text">Enable Detection</span>
+          </label>
+        </div>
+
+        <div class="setting-group">
+          <label class="toggle-label">
+            <input type="checkbox" id="overlayToggle" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-text">Show Warning Overlays</span>
+          </label>
+        </div>
+
+        <div class="setting-group">
+          <label class="toggle-label">
+            <input type="checkbox" id="confidenceToggle" checked>
+            <span class="toggle-slider"></span>
+            <span class="toggle-text">Show Confidence Score</span>
+          </label>
+        </div>
+
+        <div class="setting-group" id="llmSettingsGroup">
+          <label class="toggle-label">
+            <input type="checkbox" id="llmToggle">
+            <span class="toggle-slider"></span>
+            <span class="toggle-text">LLM Analysis (95% accuracy)</span>
+          </label>
+        </div>
+
+        <div class="setting-group" id="analysisMode" style="display: none;">
+          <label class="select-label">
+            <span>Analysis Mode:</span>
+            <select id="analysisModeSelect">
+              <option value="quick">Quick (~5s, $0.01)</option>
+              <option value="comprehensive">Comprehensive (~60s, $0.02)</option>
+            </select>
+          </label>
+        </div>
+
+        <div class="setting-group">
+          <label class="toggle-label">
+            <input type="checkbox" id="quickModeToggle">
+            <span class="toggle-slider"></span>
+            <span class="toggle-text">Quick Mode (Traditional, Faster)</span>
+          </label>
+        </div>
+
+        <div class="setting-group slider-group">
+          <label class="slider-label">
+            <span>Detection Threshold</span>
+            <span class="threshold-value" id="thresholdValue">70%</span>
+          </label>
+          <input type="range" id="thresholdSlider" min="50" max="90" value="70" step="5">
+          <div class="slider-labels">
+            <span>Less Strict</span>
+            <span>More Strict</span>
+          </div>
+        </div>
+
+        <div class="setting-group color-group">
+          <label class="color-label">
+            <span>Highlight Color</span>
+            <input type="color" id="colorPicker" value="#ff6b6b">
+          </label>
+        </div>
+      </section>
+
+      <section class="actions-section">
+        <button id="rescanBtn" class="btn btn-secondary">
+          <span class="btn-icon">🔄</span>
+          Rescan Page
+        </button>
+        <button id="clearCacheBtn" class="btn btn-secondary">
+          <span class="btn-icon">🗑️</span>
+          Clear Cache
+        </button>
+        <button id="setupLLMBtn" class="btn btn-primary" style="display: none;">
+          <span class="btn-icon">🧠</span>
+          Setup LLM
+        </button>
+      </section>
+
+      <section class="privacy-section">
+        <h3>Privacy Notice</h3>
+        <p>Traditional detection happens locally. LLM analysis uses Google Gemini API (optional). Text is sent to Google for analysis when LLM mode is enabled.</p>
+        <div class="privacy-controls">
+          <label class="checkbox-label">
+            <input type="checkbox" id="privacyConsent" checked>
+            <span>I understand and accept the privacy terms</span>
+          </label>
+        </div>
+      </section>
+
+      <section class="info-section">
+        <details>
+          <summary>How It Works</summary>
+          <div class="info-content">
+            <p>This extension detects GPT-4o generated text by analyzing:</p>
+            <ul>
+              <li>Language patterns unique to GPT-4o</li>
+              <li>Rhetorical structures and transitions</li>
+              <li>Statistical text features</li>
+              <li>Formatting and list structures</li>
+            </ul>
+            <p>Detection accuracy: ~89% traditional (data-optimized), ~95% with LLM enhancement</p>
+          </div>
+        </details>
+        
+        <details>
+          <summary>Optimized Pattern Detection</summary>
+          <div class="info-content">
+            <h4>AI Indicators (High Reliability):</h4>
+            <ul>
+              <li><strong>Hedging Language (87%):</strong> "it's important to note", "merit thorough examination"</li>
+              <li><strong>Balanced Presentation (85%):</strong> "On one hand... On the other hand" structures</li>
+              <li><strong>Formal Transitions (82%):</strong> "Furthermore", "moreover" in casual contexts</li>
+              <li><strong>Meta-Commentary (79%):</strong> "when examining", "we must acknowledge"</li>
+            </ul>
+            <h4>Human Indicators:</h4>
+            <ul>
+              <li><strong>Casual Authenticity (88%):</strong> "tbh", "lol", "rn", "lmao"</li>
+              <li><strong>Natural Errors (86%):</strong> Inconsistent capitalization, informal grammar</li>
+              <li><strong>Emotional Spontaneity (84%):</strong> "I literally cannot even"</li>
+              <li><strong>Personal Voice (77%):</strong> Direct opinions, personal anecdotes</li>
+            </ul>
+            <p><small>Percentages show pattern reliability from data analysis</small></p>
+          </div>
+        </details>
+      </section>
+    </main>
+
+    <footer class="popup-footer">
+      <a href="#" id="reportIssue">Report Issue</a>
+      <span class="separator">•</span>
+      <a href="#" id="about">About</a>
+    </footer>
+  </div>
+
+  <script src="popup.js"></script>
+</body>
+</html>

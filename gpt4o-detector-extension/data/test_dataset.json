@@ -1,0 +1,47 @@
+{
+  "metadata": {
+    "created": "2025-08-14T13:43:53.741062+00:00",
+    "total_samples": 3,
+    "gpt4o_samples": 2,
+    "human_samples": 1,
+    "sources": [
+      "test"
+    ],
+    "version": "1.0"
+  },
+  "samples": [
+    {
+      "id": "7fd0c361b95b",
+      "text": "While AI continues to evolve rapidly, it is important to note both advantages and disadvantages. On one hand, productivity increases. On the other hand, job displacement concerns persist.",
+      "label": "gpt4o",
+      "confidence": 1.0,
+      "source": "test",
+      "timestamp": "2025-08-14T13:18:51.241855+00:00",
+      "character_count": 187,
+      "word_count": 28,
+      "metadata": {}
+    },
+    {
+      "id": "854f06ac691e",
+      "text": "AI is moving way too fast tbh can barely keep up anymore 😅",
+      "label": "human",
+      "confidence": 1.0,
+      "source": "test",
+      "timestamp": "2025-08-14T13:18:51.241855+00:00",
+      "character_count": 58,
+      "word_count": 13,
+      "metadata": {}
+    },
+    {
+      "id": "2540bec49005",
+      "text": "While artificial intelligence continues to evolve, it's important to note both advantages and disadvantages. On one hand, productivity increases. On the other hand, concerns persist.",
+      "label": "gpt4o",
+      "confidence": 1.0,
+      "source": "test",
+      "timestamp": "2025-08-14T13:43:53.740053+00:00",
+      "character_count": 182,
+      "word_count": 25,
+      "metadata": {}
+    }
+  ]
+}

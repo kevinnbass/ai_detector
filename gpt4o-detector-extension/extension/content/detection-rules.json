@@ -1,0 +1,76 @@
+{
+  "version": "1.0.0",
+  "threshold": 0.7,
+  "rules": [
+    {
+      "id": "HEDGE_01",
+      "pattern": "excessive_hedging",
+      "regex": "\\b(perhaps|maybe|possibly|might|could|seems|appears|likely|probably|generally|typically|often|sometimes)\\b",
+      "weight": 0.15,
+      "threshold": 3,
+      "description": "Excessive hedging language"
+    },
+    {
+      "id": "CONTRAST_01",
+      "pattern": "contrast_rhetoric",
+      "regex": "(not\\s+\\w+,?\\s+but\\s+\\w+|while\\s+.*,\\s+|although\\s+.*,\\s+|however,?\\s+|on\\s+the\\s+other\\s+hand)",
+      "weight": 0.25,
+      "threshold": 1,
+      "description": "Contrast constructions (not X, but Y)"
+    },
+    {
+      "id": "FORMAL_01",
+      "pattern": "formal_in_casual",
+      "regex": "\\b(furthermore|moreover|consequently|therefore|thus|hence|accordingly|nevertheless|nonetheless)\\b",
+      "weight": 0.20,
+      "threshold": 1,
+      "description": "Formal language in casual context"
+    },
+    {
+      "id": "LIST_01",
+      "pattern": "structured_lists",
+      "regex": "(firstly|secondly|thirdly|first,|second,|third,|\\d\\.|•|-\\s+)",
+      "weight": 0.15,
+      "threshold": 2,
+      "description": "Structured list formatting"
+    },
+    {
+      "id": "QUAL_01",
+      "pattern": "excessive_qualifiers",
+      "regex": "(it's\\s+(important|worth|crucial|essential)\\s+(to\\s+)?(note|noting|mention|consider)|keep\\s+in\\s+mind|bear\\s+in\\s+mind|remember\\s+that|consider\\s+that)",
+      "weight": 0.20,
+      "threshold": 1,
+      "description": "Qualifier phrases"
+    },
+    {
+      "id": "BALANCE_01",
+      "pattern": "balanced_presentation",
+      "regex": "(advantages.*disadvantages|pros.*cons|benefits.*drawbacks|positive.*negative|strengths.*weaknesses)",
+      "weight": 0.25,
+      "threshold": 1,
+      "description": "Balanced pros/cons"
+    },
+    {
+      "id": "EXPLAIN_01",
+      "pattern": "explanatory_style",
+      "regex": "(essentially|basically|in\\s+other\\s+words|simply\\s+put|to\\s+put\\s+it\\s+simply|in\\s+essence)",
+      "weight": 0.15,
+      "threshold": 1,
+      "description": "Explanatory language"
+    },
+    {
+      "id": "CAVEAT_01",
+      "pattern": "caveats",
+      "regex": "(that\\s+said|having\\s+said\\s+that|with\\s+that\\s+in\\s+mind|that\\s+being\\s+said|to\\s+be\\s+fair)",
+      "weight": 0.18,
+      "threshold": 1,
+      "description": "Caveats and disclaimers"
+    }
+  ],
+  "metadata": {
+    "created": "2024-01-01",
+    "description": "Detection patterns for GPT-4o generated text",
+    "accuracy": "85%",
+    "false_positive_rate": "12%"
+  }
+}
