@@ -1,5 +1,24 @@
 # Claude Code Instructions
 
+## 🎯 Implementation Roadmap
+
+**CRITICAL: Follow the comprehensive implementation roadmap for all development work**
+
+📍 **Roadmap Location**: `C:\Users\Kevin\ai_detector\IMPLEMENTATION_ROADMAP.md`
+
+### Roadmap Sections:
+1. **File & Directory Organization** - Optimal project structure
+2. **Code Architecture** - Design patterns and best practices  
+3. **Consolidation** - Removing duplication and redundancy
+4. **Integration** - Module communication and APIs
+5. **Test Coverage** - Unit, integration, E2E, and performance tests
+
+### Before Starting Any Task:
+1. Review the relevant section in IMPLEMENTATION_ROADMAP.md
+2. Check dependencies and prerequisites
+3. Follow the defined patterns and standards
+4. Update progress in the roadmap
+
 ## Git Workflow
 
 **IMPORTANT: Upon completion of each task, you MUST:**
