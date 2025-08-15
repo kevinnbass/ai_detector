@@ -1,0 +1,1682 @@
+{
+  "nodes": [
+    {
+      "id": "minimal_throughput_test",
+      "label": "minimal_throughput_test",
+      "coupling_out": 0,
+      "coupling_in": 0,
+      "size": 1,
+      "group": "root"
+    },
+    {
+      "id": "validate_throughput",
+      "label": "validate_throughput",
+      "coupling_out": 1,
+      "coupling_in": 0,
+      "size": 2,
+      "group": "root"
+    },
+    {
+      "id": "docs.complexity_refactoring_examples",
+      "label": "complexity_refactoring_examples",
+      "coupling_out": 0,
+      "coupling_in": 0,
+      "size": 1,
+      "group": "docs"
+    },
+    {
+      "id": "docs.api.openapi_spec",
+      "label": "openapi_spec",
+      "coupling_out": 1,
+      "coupling_in": 0,
+      "size": 2,
+      "group": "docs"
+    },
+    {
+      "id": "scripts.demo_optimization",
+      "label": "demo_optimization",
+      "coupling_out": 1,
+      "coupling_in": 0,
+      "size": 2,
+      "group": "scripts"
+    },
+    {
+      "id": "scripts.deploy",
+      "label": "deploy",
+      "coupling_out": 0,
+      "coupling_in": 0,
+      "size": 1,
+      "group": "scripts"
+    },
+    {
+      "id": "scripts.fix_unicode",
+      "label": "fix_unicode",
+      "coupling_out": 0,
+      "coupling_in": 0,
+      "size": 1,
+      "group": "scripts"
+    },
+    {
+      "id": "scripts.run_optimization",
+      "label": "run_optimization",
+      "coupling_out": 1,
+      "coupling_in": 0,
+      "size": 2,
+      "group": "scripts"
+    },
+    {
+      "id": "src",
+      "label": "src",
+      "coupling_out": 0,
+      "coupling_in": 0,
+      "size": 1,
+      "group": "root"
+    },
+    {
+      "id": "src.api.error_handlers",
+      "label": "error_handlers",
+      "coupling_out": 2,
+      "coupling_in": 3,
+      "size": 6,
+      "group": "src"
+    },
+    {
+      "id": "src.api.monitoring_routes",
+      "label": "monitoring_routes",
+      "coupling_out": 1,
+      "coupling_in": 0,
+      "size": 2,
+      "group": "src"
+    },
+    {
+      "id": "src.api.server",
+      "label": "server",
+      "coupling_out": 1,
+      "coupling_in": 1,
+      "size": 3,
+      "group": "src"
+    },
+    {
+      "id": "src.api",
+      "label": "api",
+      "coupling_out": 2,
+      "coupling_in": 0,
+      "size": 3,
+      "group": "src"
+    },
+    {
+      "id": "src.api.performance.api_optimizer",
+      "label": "api_optimizer",
+      "coupling_out": 1,
+      "coupling_in": 1,
+      "size": 3,
+      "group": "src"
+    },
+    {
+      "id": "src.api.performance.connection_optimizer",
+      "label": "connection_optimizer",
+      "coupling_out": 1,
+      "coupling_in": 0,
+      "size": 2,
+      "group": "src"
+    },
+    {
+      "id": "src.api.rest.auth",
+      "label": "auth",
+      "coupling_out": 0,
+      "coupling_in": 3,
+      "size": 4,
+      "group": "src"
+    },
+    {
+      "id": "src.api.rest.middleware",
+      "label": "middleware",
+      "coupling_out": 0,
+      "coupling_in": 5,
+      "size": 6,
+      "group": "src"
+    },
+    {
+      "id": "src.api.rest.optimized_app",
+      "label": "optimized_app",
+      "coupling_out": 3,
+      "coupling_in": 0,
+      "size": 4,
+      "group": "src"
+    },
+    {
+      "id": "src.api.rest.routes",
+      "label": "routes",
+      "coupling_out": 8,
+      "coupling_in": 2,
+      "size": 11,
+      "group": "src"
+    },
+    {
+      "id": "src.api.rest.schemas",
+      "label": "schemas",
+      "coupling_out": 0,
+      "coupling_in": 3,
+      "size": 4,
+      "group": "src"
+    },
+    {
+      "id": "src.api.rest",
+      "label": "rest",
+      "coupling_out": 4,
+      "coupling_in": 1,
+      "size": 6,
+      "group": "src"
+    },
+    {
+      "id": "src.api.websocket.connection_manager",
+      "label": "connection_manager",
+      "coupling_out": 3,
+      "coupling_in": 2,
+      "size": 6,
+      "group": "src"
+    },
+    {
+      "id": "src.api.websocket.routes",
+      "label": "routes",
+      "coupling_out": 2,
+      "coupling_in": 0,
+      "size": 3,
+      "group": "src"
+    },
+    {
+      "id": "src.api.websocket",
+      "label": "websocket",
+      "coupling_out": 2,
+      "coupling_in": 2,
+      "size": 5,
+      "group": "src"
+    },
+    {
+      "id": "src.core",
+      "label": "core",
+      "coupling_out": 0,
+      "coupling_in": 16,
+      "size": 17,
+      "group": "src"
+    },
+    {
+      "id": "src.core.abstractions.business_logic_layer",
+      "label": "business_logic_layer",
+      "coupling_out": 2,
+      "coupling_in": 4,
+      "size": 7,
+      "group": "src"
+    },
+    {
+      "id": "src.core.abstractions.data_access_layer",
+      "label": "data_access_layer",
+      "coupling_out": 2,
+      "coupling_in": 3,
+      "size": 6,
+      "group": "src"
+    },
+    {
+      "id": "src.core.abstractions.presentation_layer",
+      "label": "presentation_layer",
+      "coupling_out": 2,
+      "coupling_in": 4,
+      "size": 7,
+      "group": "src"
+    },
+    {
+      "id": "src.core.abstractions",
+      "label": "abstractions",
+      "coupling_out": 3,
+      "coupling_in": 0,
+      "size": 4,
+      "group": "src"
+    },
+    {
+      "id": "src.core.api_client.exceptions",
+      "label": "exceptions",
+      "coupling_out": 0,
+      "coupling_in": 0,
+      "size": 1,
+      "group": "src"
+    },
+    {
+      "id": "src.core.api_client.middleware",
+      "label": "middleware",
+      "coupling_out": 1,
+      "coupling_in": 0,
+      "size": 2,
+      "group": "src"
+    },
+    {
+      "id": "src.core.api_client.queue_manager",
+      "label": "queue_manager",
+      "coupling_out": 1,
+      "coupling_in": 3,
+      "size": 5,
+      "group": "src"
+    },
+    {
+      "id": "src.core.api_client.rate_limiter",
+      "label": "rate_limiter",
+      "coupling_out": 1,
+      "coupling_in": 2,
+      "size": 4,
+      "group": "src"
+    },
+    {
+      "id": "src.core.api_client.response_cache",
+      "label": "response_cache",
+      "coupling_out": 0,
+      "coupling_in": 2,
+      "size": 3,
+      "group": "src"
+    },
+    {
+      "id": "src.core.api_client.retry_handler",
+      "label": "retry_handler",
+      "coupling_out": 1,
+      "coupling_in": 2,
+      "size": 4,
+      "group": "src"
+    },
+    {
+      "id": "src.core.api_client.unified_client",
+      "label": "unified_client",
+      "coupling_out": 6,
+      "coupling_in": 2,
+      "size": 9,
+      "group": "src"
+    },
+    {
+      "id": "src.core.api_client",
+      "label": "api_client",
+      "coupling_out": 7,
+      "coupling_in": 0,
+      "size": 8,
+      "group": "src"
+    },
+    {
+      "id": "src.core.dependency_injection.container",
+      "label": "container",
+      "coupling_out": 0,
+      "coupling_in": 2,
+      "size": 3,
+      "group": "src"
+    },
+    {
+      "id": "src.core.dependency_injection.service_configuration",
+      "label": "service_configuration",
+      "coupling_out": 11,
+      "coupling_in": 2,
+      "size": 14,
+      "group": "src"
+    },
+    {
+      "id": "src.core.dependency_injection",
+      "label": "dependency_injection",
+      "coupling_out": 2,
+      "coupling_in": 2,
+      "size": 5,
+      "group": "src"
+    },
+    {
+      "id": "src.core.detection.detector",
+      "label": "detector",
+      "coupling_out": 1,
+      "coupling_in": 5,
+      "size": 7,
+      "group": "src"
+    },
+    {
+      "id": "src.core.detection.fast_ml_detector",
+      "label": "fast_ml_detector",
+      "coupling_out": 2,
+      "coupling_in": 1,
+      "size": 4,
+      "group": "src"
+    },
+    {
+      "id": "src.core.detection.fast_pattern_detector",
+      "label": "fast_pattern_detector",
+      "coupling_out": 2,
+      "coupling_in": 1,
+      "size": 4,
+      "group": "src"
+    },
+    {
+      "id": "src.core.detection.optimized_detector",
+      "label": "optimized_detector",
+      "coupling_out": 4,
+      "coupling_in": 1,
+      "size": 6,
+      "group": "src"
+    },
+    {
+      "id": "src.core.detection",
+      "label": "detection",
+      "coupling_out": 1,
+      "coupling_in": 0,
+      "size": 2,
+      "group": "src"
+    },
+    {
+      "id": "src.core.error_handling.context",
+      "label": "context",
+      "coupling_out": 0,
+      "coupling_in": 4,
+      "size": 5,
+      "group": "src"
+    },
+    {
+      "id": "src.core.error_handling.decorators",
+      "label": "decorators",
+      "coupling_out": 4,
+      "coupling_in": 1,
+      "size": 6,
+      "group": "src"
+    },
+    {
+      "id": "src.core.error_handling.exceptions",
+      "label": "exceptions",
+      "coupling_out": 0,
+      "coupling_in": 0,
+      "size": 1,
+      "group": "src"
+    },
+    {
+      "id": "src.core.error_handling.handlers",
+      "label": "handlers",
+      "coupling_out": 4,
+      "coupling_in": 0,
+      "size": 5,
+      "group": "src"
+    },
+    {
+      "id": "src.core.error_handling.recovery",
+      "label": "recovery",
+      "coupling_out": 2,
+      "coupling_in": 3,
+      "size": 6,
+      "group": "src"
+    },
+    {
+      "id": "src.core.error_handling",
+      "label": "error_handling",
+      "coupling_out": 5,
+      "coupling_in": 1,
+      "size": 7,
+      "group": "src"
+    },
+    {
+      "id": "src.core.events.event_bus",
+      "label": "event_bus",
+      "coupling_out": 0,
+      "coupling_in": 2,
+      "size": 3,
+      "group": "src"
+    },
+    {
+      "id": "src.core.factories.detector_factory",
+      "label": "detector_factory",
+      "coupling_out": 4,
+      "coupling_in": 1,
+      "size": 6,
+      "group": "src"
+    },
+    {
+      "id": "src.core.interfaces.api_interfaces",
+      "label": "api_interfaces",
+      "coupling_out": 1,
+      "coupling_in": 3,
+      "size": 5,
+      "group": "src"
+    },
+    {
+      "id": "src.core.interfaces.base_interfaces",
+      "label": "base_interfaces",
+      "coupling_out": 0,
+      "coupling_in": 8,
+      "size": 9,
+      "group": "src"
+    },
+    {
+      "id": "src.core.interfaces.data_interfaces",
+      "label": "data_interfaces",
+      "coupling_out": 1,
+      "coupling_in": 6,
+      "size": 8,
+      "group": "src"
+    },
+    {
+      "id": "src.core.interfaces.detector_interfaces",
+      "label": "detector_interfaces",
+      "coupling_out": 1,
+      "coupling_in": 4,
+      "size": 6,
+      "group": "src"
+    },
+    {
+      "id": "src.core.interfaces.extension_interfaces",
+      "label": "extension_interfaces",
+      "coupling_out": 1,
+      "coupling_in": 2,
+      "size": 4,
+      "group": "src"
+    },
+    {
+      "id": "src.core.interfaces.integration_examples",
+      "label": "integration_examples",
+      "coupling_out": 6,
+      "coupling_in": 0,
+      "size": 7,
+      "group": "src"
+    },
+    {
+      "id": "src.core.interfaces.ml_interfaces",
+      "label": "ml_interfaces",
+      "coupling_out": 2,
+      "coupling_in": 1,
+      "size": 4,
+      "group": "src"
+    },
+    {
+      "id": "src.core.interfaces.pipeline_interfaces",
+      "label": "pipeline_interfaces",
+      "coupling_out": 1,
+      "coupling_in": 2,
+      "size": 4,
+      "group": "src"
+    },
+    {
+      "id": "src.core.interfaces.service_interfaces",
+      "label": "service_interfaces",
+      "coupling_out": 3,
+      "coupling_in": 2,
+      "size": 6,
+      "group": "src"
+    },
+    {
+      "id": "src.core.interfaces",
+      "label": "interfaces",
+      "coupling_out": 8,
+      "coupling_in": 0,
+      "size": 9,
+      "group": "src"
+    },
+    {
+      "id": "src.core.messaging.exceptions",
+      "label": "exceptions",
+      "coupling_out": 0,
+      "coupling_in": 12,
+      "size": 13,
+      "group": "src"
+    },
+    {
+      "id": "src.core.messaging.protocol",
+      "label": "protocol",
+      "coupling_out": 1,
+      "coupling_in": 2,
+      "size": 4,
+      "group": "src"
+    },
+    {
+      "id": "src.core.messaging",
+      "label": "messaging",
+      "coupling_out": 5,
+      "coupling_in": 0,
+      "size": 6,
+      "group": "src"
+    },
+    {
+      "id": "src.core.monitoring.alerts",
+      "label": "alerts",
+      "coupling_out": 3,
+      "coupling_in": 1,
+      "size": 5,
+      "group": "src"
+    },
+    {
+      "id": "src.core.monitoring.logger",
+      "label": "logger",
+      "coupling_out": 0,
+      "coupling_in": 4,
+      "size": 5,
+      "group": "src"
+    },
+    {
+      "id": "src.core.monitoring.metrics",
+      "label": "metrics",
+      "coupling_out": 0,
+      "coupling_in": 4,
+      "size": 5,
+      "group": "src"
+    },
+    {
+      "id": "src.core.monitoring.monitor",
+      "label": "monitor",
+      "coupling_out": 2,
+      "coupling_in": 2,
+      "size": 5,
+      "group": "src"
+    },
+    {
+      "id": "src.core.monitoring.telemetry",
+      "label": "telemetry",
+      "coupling_out": 2,
+      "coupling_in": 1,
+      "size": 4,
+      "group": "src"
+    },
+    {
+      "id": "src.core.monitoring",
+      "label": "monitoring",
+      "coupling_out": 5,
+      "coupling_in": 11,
+      "size": 17,
+      "group": "src"
+    },
+    {
+      "id": "src.core.patterns.gpt4o_miner",
+      "label": "gpt4o_miner",
+      "coupling_out": 1,
+      "coupling_in": 1,
+      "size": 3,
+      "group": "src"
+    },
+    {
+      "id": "src.core.patterns.pattern_registry",
+      "label": "pattern_registry",
+      "coupling_out": 1,
+      "coupling_in": 1,
+      "size": 3,
+      "group": "src"
+    },
+    {
+      "id": "src.core.patterns",
+      "label": "patterns",
+      "coupling_out": 1,
+      "coupling_in": 0,
+      "size": 2,
+      "group": "src"
+    },
+    {
+      "id": "src.core.performance.detector_optimizer",
+      "label": "detector_optimizer",
+      "coupling_out": 1,
+      "coupling_in": 1,
+      "size": 3,
+      "group": "src"
+    },
+    {
+      "id": "src.core.quality.complexity_reducer",
+      "label": "complexity_reducer",
+      "coupling_out": 1,
+      "coupling_in": 0,
+      "size": 2,
+      "group": "src"
+    },
+    {
+      "id": "src.core.quality.coupling_analyzer",
+      "label": "coupling_analyzer",
+      "coupling_out": 1,
+      "coupling_in": 0,
+      "size": 2,
+      "group": "src"
+    },
+    {
+      "id": "src.core.repositories.base_repository",
+      "label": "base_repository",
+      "coupling_out": 2,
+      "coupling_in": 4,
+      "size": 7,
+      "group": "src"
+    },
+    {
+      "id": "src.core.repositories.detection_repository",
+      "label": "detection_repository",
+      "coupling_out": 2,
+      "coupling_in": 5,
+      "size": 8,
+      "group": "src"
+    },
+    {
+      "id": "src.core.services.base_service",
+      "label": "base_service",
+      "coupling_out": 2,
+      "coupling_in": 1,
+      "size": 4,
+      "group": "src"
+    },
+    {
+      "id": "src.data",
+      "label": "data",
+      "coupling_out": 0,
+      "coupling_in": 0,
+      "size": 1,
+      "group": "src"
+    },
+    {
+      "id": "src.data.collectors.data_collector",
+      "label": "data_collector",
+      "coupling_out": 0,
+      "coupling_in": 7,
+      "size": 8,
+      "group": "src"
+    },
+    {
+      "id": "src.data.collectors.simple_collector",
+      "label": "simple_collector",
+      "coupling_out": 0,
+      "coupling_in": 0,
+      "size": 1,
+      "group": "src"
+    },
+    {
+      "id": "src.data.collectors.tweet_data_collector",
+      "label": "tweet_data_collector",
+      "coupling_out": 1,
+      "coupling_in": 3,
+      "size": 5,
+      "group": "src"
+    },
+    {
+      "id": "src.data.collectors.unified_collector",
+      "label": "unified_collector",
+      "coupling_out": 0,
+      "coupling_in": 0,
+      "size": 1,
+      "group": "src"
+    },
+    {
+      "id": "src.data.collectors",
+      "label": "collectors",
+      "coupling_out": 2,
+      "coupling_in": 0,
+      "size": 3,
+      "group": "src"
+    },
+    {
+      "id": "src.data.processing.gpu_accelerated_processor",
+      "label": "gpu_accelerated_processor",
+      "coupling_out": 1,
+      "coupling_in": 1,
+      "size": 3,
+      "group": "src"
+    },
+    {
+      "id": "src.data.processing.high_throughput_processor",
+      "label": "high_throughput_processor",
+      "coupling_out": 1,
+      "coupling_in": 2,
+      "size": 4,
+      "group": "src"
+    },
+    {
+      "id": "src.data.processing.throughput_optimizer",
+      "label": "throughput_optimizer",
+      "coupling_out": 3,
+      "coupling_in": 0,
+      "size": 4,
+      "group": "src"
+    },
+    {
+      "id": "src.data.processors.data_augmenter",
+      "label": "data_augmenter",
+      "coupling_out": 2,
+      "coupling_in": 0,
+      "size": 3,
+      "group": "src"
+    },
+    {
+      "id": "src.integrations.unified_analyzer",
+      "label": "unified_analyzer",
+      "coupling_out": 0,
+      "coupling_in": 2,
+      "size": 3,
+      "group": "src"
+    },
+    {
+      "id": "src.integrations.gemini.advanced_llm_system",
+      "label": "advanced_llm_system",
+      "coupling_out": 1,
+      "coupling_in": 0,
+      "size": 2,
+      "group": "src"
+    },
+    {
+      "id": "src.integrations.gemini.demo_gemini",
+      "label": "demo_gemini",
+      "coupling_out": 1,
+      "coupling_in": 0,
+      "size": 2,
+      "group": "src"
+    },
+    {
+      "id": "src.integrations.gemini.gemini_structured_analyzer",
+      "label": "gemini_structured_analyzer",
+      "coupling_out": 0,
+      "coupling_in": 1,
+      "size": 2,
+      "group": "src"
+    },
+    {
+      "id": "src.integrations.gemini.llm_analyzer",
+      "label": "llm_analyzer",
+      "coupling_out": 2,
+      "coupling_in": 1,
+      "size": 4,
+      "group": "src"
+    },
+    {
+      "id": "src.training.trainers.active_learner",
+      "label": "active_learner",
+      "coupling_out": 4,
+      "coupling_in": 0,
+      "size": 5,
+      "group": "src"
+    },
+    {
+      "id": "src.training.trainers.enhanced_trainer",
+      "label": "enhanced_trainer",
+      "coupling_out": 3,
+      "coupling_in": 0,
+      "size": 4,
+      "group": "src"
+    },
+    {
+      "id": "src.training.trainers.trainer",
+      "label": "trainer",
+      "coupling_out": 3,
+      "coupling_in": 3,
+      "size": 7,
+      "group": "src"
+    },
+    {
+      "id": "src.training.trainers.unified_trainer",
+      "label": "unified_trainer",
+      "coupling_out": 0,
+      "coupling_in": 0,
+      "size": 1,
+      "group": "src"
+    },
+    {
+      "id": "src.training.validators.validator",
+      "label": "validator",
+      "coupling_out": 3,
+      "coupling_in": 0,
+      "size": 4,
+      "group": "src"
+    },
+    {
+      "id": "src.utils.api_utils",
+      "label": "api_utils",
+      "coupling_out": 1,
+      "coupling_in": 1,
+      "size": 3,
+      "group": "src"
+    },
+    {
+      "id": "src.utils.common",
+      "label": "common",
+      "coupling_out": 1,
+      "coupling_in": 8,
+      "size": 10,
+      "group": "src"
+    },
+    {
+      "id": "src.utils.extension_utils",
+      "label": "extension_utils",
+      "coupling_out": 0,
+      "coupling_in": 1,
+      "size": 2,
+      "group": "src"
+    },
+    {
+      "id": "src.utils.ml_utils",
+      "label": "ml_utils",
+      "coupling_out": 0,
+      "coupling_in": 1,
+      "size": 2,
+      "group": "src"
+    },
+    {
+      "id": "src.utils.schema_validator",
+      "label": "schema_validator",
+      "coupling_out": 0,
+      "coupling_in": 1,
+      "size": 2,
+      "group": "src"
+    },
+    {
+      "id": "src.utils",
+      "label": "utils",
+      "coupling_out": 4,
+      "coupling_in": 0,
+      "size": 5,
+      "group": "src"
+    },
+    {
+      "id": "tests.performance.benchmarks",
+      "label": "benchmarks",
+      "coupling_out": 5,
+      "coupling_in": 0,
+      "size": 6,
+      "group": "tests"
+    },
+    {
+      "id": "tests.performance.performance-monitor",
+      "label": "performance-monitor",
+      "coupling_out": 0,
+      "coupling_in": 0,
+      "size": 1,
+      "group": "tests"
+    },
+    {
+      "id": "tests.performance.run_performance_tests",
+      "label": "run_performance_tests",
+      "coupling_out": 0,
+      "coupling_in": 0,
+      "size": 1,
+      "group": "tests"
+    },
+    {
+      "id": "tests.python.conftest",
+      "label": "conftest",
+      "coupling_out": 3,
+      "coupling_in": 0,
+      "size": 4,
+      "group": "tests"
+    }
+  ],
+  "edges": [
+    {
+      "source": "validate_throughput",
+      "target": "src.data.processing.high_throughput_processor"
+    },
+    {
+      "source": "src.data.processing.high_throughput_processor",
+      "target": "src.core.monitoring"
+    },
+    {
+      "source": "docs.api.openapi_spec",
+      "target": "src.api.server"
+    },
+    {
+      "source": "src.api.server",
+      "target": "src.api.websocket"
+    },
+    {
+      "source": "scripts.demo_optimization",
+      "target": "src.data.collectors.tweet_data_collector"
+    },
+    {
+      "source": "src.data.collectors.tweet_data_collector",
+      "target": "src.core"
+    },
+    {
+      "source": "scripts.run_optimization",
+      "target": "src.data.collectors.tweet_data_collector"
+    },
+    {
+      "source": "src.api.error_handlers",
+      "target": "src.core.error_handling"
+    },
+    {
+      "source": "src.api.error_handlers",
+      "target": "src.utils.schema_validator"
+    },
+    {
+      "source": "src.core.error_handling",
+      "target": "src.core.messaging.exceptions"
+    },
+    {
+      "source": "src.core.error_handling",
+      "target": "src.api.error_handlers"
+    },
+    {
+      "source": "src.core.error_handling",
+      "target": "src.core.error_handling.recovery"
+    },
+    {
+      "source": "src.core.error_handling",
+      "target": "src.core.error_handling.context"
+    },
+    {
+      "source": "src.core.error_handling",
+      "target": "src.core.error_handling.decorators"
+    },
+    {
+      "source": "src.api.monitoring_routes",
+      "target": "src.core.monitoring"
+    },
+    {
+      "source": "src.core.monitoring",
+      "target": "src.core.monitoring.logger"
+    },
+    {
+      "source": "src.core.monitoring",
+      "target": "src.core.monitoring.metrics"
+    },
+    {
+      "source": "src.core.monitoring",
+      "target": "src.core.monitoring.monitor"
+    },
+    {
+      "source": "src.core.monitoring",
+      "target": "src.core.monitoring.telemetry"
+    },
+    {
+      "source": "src.core.monitoring",
+      "target": "src.core.monitoring.alerts"
+    },
+    {
+      "source": "src.api.websocket",
+      "target": "src.api.websocket.connection_manager"
+    },
+    {
+      "source": "src.api.websocket",
+      "target": "src.api.rest.routes"
+    },
+    {
+      "source": "src.api",
+      "target": "src.api.rest"
+    },
+    {
+      "source": "src.api",
+      "target": "src.api.websocket"
+    },
+    {
+      "source": "src.api.rest",
+      "target": "src.api.rest.routes"
+    },
+    {
+      "source": "src.api.rest",
+      "target": "src.api.rest.schemas"
+    },
+    {
+      "source": "src.api.rest",
+      "target": "src.api.rest.middleware"
+    },
+    {
+      "source": "src.api.rest",
+      "target": "src.api.rest.auth"
+    },
+    {
+      "source": "src.api.performance.api_optimizer",
+      "target": "src.core.monitoring"
+    },
+    {
+      "source": "src.api.performance.connection_optimizer",
+      "target": "src.core.monitoring"
+    },
+    {
+      "source": "src.api.rest.optimized_app",
+      "target": "src.api.performance.api_optimizer"
+    },
+    {
+      "source": "src.api.rest.optimized_app",
+      "target": "src.core.detection.optimized_detector"
+    },
+    {
+      "source": "src.api.rest.optimized_app",
+      "target": "src.core.monitoring"
+    },
+    {
+      "source": "src.core.detection.optimized_detector",
+      "target": "src.core.detection.fast_pattern_detector"
+    },
+    {
+      "source": "src.core.detection.optimized_detector",
+      "target": "src.core.detection.fast_ml_detector"
+    },
+    {
+      "source": "src.core.detection.optimized_detector",
+      "target": "src.core.performance.detector_optimizer"
+    },
+    {
+      "source": "src.core.detection.optimized_detector",
+      "target": "src.core.monitoring"
+    },
+    {
+      "source": "src.api.rest.routes",
+      "target": "src.core.dependency_injection"
+    },
+    {
+      "source": "src.api.rest.routes",
+      "target": "src.core.abstractions.presentation_layer"
+    },
+    {
+      "source": "src.api.rest.routes",
+      "target": "src.core.abstractions.business_logic_layer"
+    },
+    {
+      "source": "src.api.rest.routes",
+      "target": "src.api.rest.schemas"
+    },
+    {
+      "source": "src.api.rest.routes",
+      "target": "src.api.rest.middleware"
+    },
+    {
+      "source": "src.api.rest.routes",
+      "target": "src.api.rest.auth"
+    },
+    {
+      "source": "src.api.rest.routes",
+      "target": "src.utils.common"
+    },
+    {
+      "source": "src.api.rest.routes",
+      "target": "src.core.dependency_injection.service_configuration"
+    },
+    {
+      "source": "src.core.dependency_injection",
+      "target": "src.core.dependency_injection.container"
+    },
+    {
+      "source": "src.core.dependency_injection",
+      "target": "src.core.dependency_injection.service_configuration"
+    },
+    {
+      "source": "src.core.abstractions.presentation_layer",
+      "target": "src.core.abstractions.business_logic_layer"
+    },
+    {
+      "source": "src.core.abstractions.presentation_layer",
+      "target": "src.core.repositories.detection_repository"
+    },
+    {
+      "source": "src.core.abstractions.business_logic_layer",
+      "target": "src.core.repositories.detection_repository"
+    },
+    {
+      "source": "src.core.abstractions.business_logic_layer",
+      "target": "src.core.abstractions.data_access_layer"
+    },
+    {
+      "source": "src.utils.common",
+      "target": "src.core"
+    },
+    {
+      "source": "src.core.dependency_injection.service_configuration",
+      "target": "src.core.dependency_injection.container"
+    },
+    {
+      "source": "src.core.dependency_injection.service_configuration",
+      "target": "src.utils.common"
+    },
+    {
+      "source": "src.core.dependency_injection.service_configuration",
+      "target": "src.core.repositories.base_repository"
+    },
+    {
+      "source": "src.core.dependency_injection.service_configuration",
+      "target": "src.core.repositories.detection_repository"
+    },
+    {
+      "source": "src.core.dependency_injection.service_configuration",
+      "target": "src.core.abstractions.data_access_layer"
+    },
+    {
+      "source": "src.core.dependency_injection.service_configuration",
+      "target": "src.core.abstractions.business_logic_layer"
+    },
+    {
+      "source": "src.core.dependency_injection.service_configuration",
+      "target": "src.core.abstractions.presentation_layer"
+    },
+    {
+      "source": "src.core.dependency_injection.service_configuration",
+      "target": "src.core.factories.detector_factory"
+    },
+    {
+      "source": "src.core.dependency_injection.service_configuration",
+      "target": "src.core.events.event_bus"
+    },
+    {
+      "source": "src.core.dependency_injection.service_configuration",
+      "target": "src.core.services.base_service"
+    },
+    {
+      "source": "src.core.dependency_injection.service_configuration",
+      "target": "src.integrations.unified_analyzer"
+    },
+    {
+      "source": "src.api.websocket.connection_manager",
+      "target": "src.core.dependency_injection"
+    },
+    {
+      "source": "src.api.websocket.connection_manager",
+      "target": "src.core.abstractions.presentation_layer"
+    },
+    {
+      "source": "src.api.websocket.connection_manager",
+      "target": "src.api.rest.schemas"
+    },
+    {
+      "source": "src.api.websocket.routes",
+      "target": "src.api.websocket.connection_manager"
+    },
+    {
+      "source": "src.api.websocket.routes",
+      "target": "src.api.rest.auth"
+    },
+    {
+      "source": "src.core.repositories.detection_repository",
+      "target": "src.core.repositories.base_repository"
+    },
+    {
+      "source": "src.core.repositories.detection_repository",
+      "target": "src.utils.common"
+    },
+    {
+      "source": "src.core.abstractions.data_access_layer",
+      "target": "src.core.repositories.base_repository"
+    },
+    {
+      "source": "src.core.abstractions.data_access_layer",
+      "target": "src.core.repositories.detection_repository"
+    },
+    {
+      "source": "src.core.repositories.base_repository",
+      "target": "src.utils.common"
+    },
+    {
+      "source": "src.core.repositories.base_repository",
+      "target": "src.core"
+    },
+    {
+      "source": "src.core.abstractions",
+      "target": "src.core.abstractions.data_access_layer"
+    },
+    {
+      "source": "src.core.abstractions",
+      "target": "src.core.abstractions.business_logic_layer"
+    },
+    {
+      "source": "src.core.abstractions",
+      "target": "src.core.abstractions.presentation_layer"
+    },
+    {
+      "source": "src.core.api_client.middleware",
+      "target": "src.core.messaging.exceptions"
+    },
+    {
+      "source": "src.core.api_client.queue_manager",
+      "target": "src.core.messaging.exceptions"
+    },
+    {
+      "source": "src.core.api_client.rate_limiter",
+      "target": "src.core.messaging.exceptions"
+    },
+    {
+      "source": "src.core.api_client.retry_handler",
+      "target": "src.core.messaging.exceptions"
+    },
+    {
+      "source": "src.core.api_client.unified_client",
+      "target": "src.core.api_client.queue_manager"
+    },
+    {
+      "source": "src.core.api_client.unified_client",
+      "target": "src.core.api_client.retry_handler"
+    },
+    {
+      "source": "src.core.api_client.unified_client",
+      "target": "src.core.api_client.rate_limiter"
+    },
+    {
+      "source": "src.core.api_client.unified_client",
+      "target": "src.core.api_client.response_cache"
+    },
+    {
+      "source": "src.core.api_client.unified_client",
+      "target": "src.api.rest.middleware"
+    },
+    {
+      "source": "src.core.api_client.unified_client",
+      "target": "src.core.messaging.exceptions"
+    },
+    {
+      "source": "src.core.api_client",
+      "target": "src.core.api_client.unified_client"
+    },
+    {
+      "source": "src.core.api_client",
+      "target": "src.core.api_client.queue_manager"
+    },
+    {
+      "source": "src.core.api_client",
+      "target": "src.core.api_client.retry_handler"
+    },
+    {
+      "source": "src.core.api_client",
+      "target": "src.core.api_client.rate_limiter"
+    },
+    {
+      "source": "src.core.api_client",
+      "target": "src.core.api_client.response_cache"
+    },
+    {
+      "source": "src.core.api_client",
+      "target": "src.api.rest.middleware"
+    },
+    {
+      "source": "src.core.api_client",
+      "target": "src.core.messaging.exceptions"
+    },
+    {
+      "source": "src.core.factories.detector_factory",
+      "target": "src.core.repositories.detection_repository"
+    },
+    {
+      "source": "src.core.factories.detector_factory",
+      "target": "src.utils.common"
+    },
+    {
+      "source": "src.core.factories.detector_factory",
+      "target": "src.core.patterns.pattern_registry"
+    },
+    {
+      "source": "src.core.factories.detector_factory",
+      "target": "src.integrations.unified_analyzer"
+    },
+    {
+      "source": "src.core.services.base_service",
+      "target": "src.utils.common"
+    },
+    {
+      "source": "src.core.services.base_service",
+      "target": "src.core.repositories.base_repository"
+    },
+    {
+      "source": "src.core.detection.detector",
+      "target": "src.core"
+    },
+    {
+      "source": "src.core.detection.fast_ml_detector",
+      "target": "src.core.monitoring"
+    },
+    {
+      "source": "src.core.detection.fast_ml_detector",
+      "target": "src.core"
+    },
+    {
+      "source": "src.core.detection.fast_pattern_detector",
+      "target": "src.core"
+    },
+    {
+      "source": "src.core.detection.fast_pattern_detector",
+      "target": "src.core.monitoring"
+    },
+    {
+      "source": "src.core.performance.detector_optimizer",
+      "target": "src.core.monitoring"
+    },
+    {
+      "source": "src.core.detection",
+      "target": "src.core.detection.detector"
+    },
+    {
+      "source": "src.core.error_handling.decorators",
+      "target": "src.core.messaging.exceptions"
+    },
+    {
+      "source": "src.core.error_handling.decorators",
+      "target": "src.api.error_handlers"
+    },
+    {
+      "source": "src.core.error_handling.decorators",
+      "target": "src.core.error_handling.context"
+    },
+    {
+      "source": "src.core.error_handling.decorators",
+      "target": "src.core.error_handling.recovery"
+    },
+    {
+      "source": "src.core.error_handling.recovery",
+      "target": "src.core.messaging.exceptions"
+    },
+    {
+      "source": "src.core.error_handling.recovery",
+      "target": "src.core.error_handling.context"
+    },
+    {
+      "source": "src.core.error_handling.handlers",
+      "target": "src.core.messaging.exceptions"
+    },
+    {
+      "source": "src.core.error_handling.handlers",
+      "target": "src.core.error_handling.context"
+    },
+    {
+      "source": "src.core.error_handling.handlers",
+      "target": "src.core.error_handling.recovery"
+    },
+    {
+      "source": "src.core.error_handling.handlers",
+      "target": "src.core"
+    },
+    {
+      "source": "src.core.patterns.pattern_registry",
+      "target": "src.core"
+    },
+    {
+      "source": "src.core.interfaces.api_interfaces",
+      "target": "src.core.interfaces.base_interfaces"
+    },
+    {
+      "source": "src.core.interfaces.data_interfaces",
+      "target": "src.core.interfaces.base_interfaces"
+    },
+    {
+      "source": "src.core.interfaces.detector_interfaces",
+      "target": "src.core.interfaces.base_interfaces"
+    },
+    {
+      "source": "src.core.interfaces.extension_interfaces",
+      "target": "src.core.interfaces.base_interfaces"
+    },
+    {
+      "source": "src.core.interfaces.integration_examples",
+      "target": "src.core.interfaces.detector_interfaces"
+    },
+    {
+      "source": "src.core.interfaces.integration_examples",
+      "target": "src.core.interfaces.service_interfaces"
+    },
+    {
+      "source": "src.core.interfaces.integration_examples",
+      "target": "src.core.interfaces.data_interfaces"
+    },
+    {
+      "source": "src.core.interfaces.integration_examples",
+      "target": "src.core.interfaces.api_interfaces"
+    },
+    {
+      "source": "src.core.interfaces.integration_examples",
+      "target": "src.core.interfaces.extension_interfaces"
+    },
+    {
+      "source": "src.core.interfaces.integration_examples",
+      "target": "src.core.interfaces.pipeline_interfaces"
+    },
+    {
+      "source": "src.core.interfaces.service_interfaces",
+      "target": "src.core.interfaces.base_interfaces"
+    },
+    {
+      "source": "src.core.interfaces.service_interfaces",
+      "target": "src.core.interfaces.detector_interfaces"
+    },
+    {
+      "source": "src.core.interfaces.service_interfaces",
+      "target": "src.core.interfaces.data_interfaces"
+    },
+    {
+      "source": "src.core.interfaces.pipeline_interfaces",
+      "target": "src.core.interfaces.base_interfaces"
+    },
+    {
+      "source": "src.core.interfaces.ml_interfaces",
+      "target": "src.core.interfaces.base_interfaces"
+    },
+    {
+      "source": "src.core.interfaces.ml_interfaces",
+      "target": "src.core.interfaces.data_interfaces"
+    },
+    {
+      "source": "src.core.interfaces",
+      "target": "src.core.interfaces.base_interfaces"
+    },
+    {
+      "source": "src.core.interfaces",
+      "target": "src.core.interfaces.detector_interfaces"
+    },
+    {
+      "source": "src.core.interfaces",
+      "target": "src.core.interfaces.data_interfaces"
+    },
+    {
+      "source": "src.core.interfaces",
+      "target": "src.core.interfaces.service_interfaces"
+    },
+    {
+      "source": "src.core.interfaces",
+      "target": "src.core.interfaces.api_interfaces"
+    },
+    {
+      "source": "src.core.interfaces",
+      "target": "src.core.interfaces.extension_interfaces"
+    },
+    {
+      "source": "src.core.interfaces",
+      "target": "src.core.interfaces.ml_interfaces"
+    },
+    {
+      "source": "src.core.interfaces",
+      "target": "src.core.interfaces.pipeline_interfaces"
+    },
+    {
+      "source": "src.core.messaging.protocol",
+      "target": "src.core.messaging.exceptions"
+    },
+    {
+      "source": "src.core.messaging",
+      "target": "src.core.messaging.protocol"
+    },
+    {
+      "source": "src.core.messaging",
+      "target": "src.core.events.event_bus"
+    },
+    {
+      "source": "src.core.messaging",
+      "target": "src.api.error_handlers"
+    },
+    {
+      "source": "src.core.messaging",
+      "target": "src.api.rest.middleware"
+    },
+    {
+      "source": "src.core.messaging",
+      "target": "src.core.messaging.exceptions"
+    },
+    {
+      "source": "src.core.monitoring.alerts",
+      "target": "src.core.monitoring.logger"
+    },
+    {
+      "source": "src.core.monitoring.alerts",
+      "target": "src.core.monitoring.metrics"
+    },
+    {
+      "source": "src.core.monitoring.alerts",
+      "target": "src.core.monitoring.monitor"
+    },
+    {
+      "source": "src.core.monitoring.monitor",
+      "target": "src.core.monitoring.metrics"
+    },
+    {
+      "source": "src.core.monitoring.monitor",
+      "target": "src.core.monitoring.logger"
+    },
+    {
+      "source": "src.core.monitoring.telemetry",
+      "target": "src.core.monitoring.logger"
+    },
+    {
+      "source": "src.core.monitoring.telemetry",
+      "target": "src.core.monitoring.metrics"
+    },
+    {
+      "source": "src.core.patterns.gpt4o_miner",
+      "target": "src.core"
+    },
+    {
+      "source": "src.core.patterns",
+      "target": "src.core.patterns.gpt4o_miner"
+    },
+    {
+      "source": "src.core.quality.complexity_reducer",
+      "target": "src.core"
+    },
+    {
+      "source": "src.core.quality.coupling_analyzer",
+      "target": "src.core"
+    },
+    {
+      "source": "src.data.collectors",
+      "target": "src.data.collectors.data_collector"
+    },
+    {
+      "source": "src.data.collectors",
+      "target": "src.data.collectors.tweet_data_collector"
+    },
+    {
+      "source": "src.data.processing.gpu_accelerated_processor",
+      "target": "src.core.monitoring"
+    },
+    {
+      "source": "src.data.processing.throughput_optimizer",
+      "target": "src.data.processing.high_throughput_processor"
+    },
+    {
+      "source": "src.data.processing.throughput_optimizer",
+      "target": "src.data.processing.gpu_accelerated_processor"
+    },
+    {
+      "source": "src.data.processing.throughput_optimizer",
+      "target": "src.core.monitoring"
+    },
+    {
+      "source": "src.data.processors.data_augmenter",
+      "target": "src.core"
+    },
+    {
+      "source": "src.data.processors.data_augmenter",
+      "target": "src.data.collectors.data_collector"
+    },
+    {
+      "source": "src.integrations.gemini.advanced_llm_system",
+      "target": "src.core"
+    },
+    {
+      "source": "src.integrations.gemini.demo_gemini",
+      "target": "src.integrations.gemini.gemini_structured_analyzer"
+    },
+    {
+      "source": "src.integrations.gemini.llm_analyzer",
+      "target": "src.data.collectors.data_collector"
+    },
+    {
+      "source": "src.integrations.gemini.llm_analyzer",
+      "target": "src.core"
+    },
+    {
+      "source": "src.training.trainers.active_learner",
+      "target": "src.core"
+    },
+    {
+      "source": "src.training.trainers.active_learner",
+      "target": "src.data.collectors.data_collector"
+    },
+    {
+      "source": "src.training.trainers.active_learner",
+      "target": "src.training.trainers.trainer"
+    },
+    {
+      "source": "src.training.trainers.active_learner",
+      "target": "src.core.detection.detector"
+    },
+    {
+      "source": "src.training.trainers.trainer",
+      "target": "src.core"
+    },
+    {
+      "source": "src.training.trainers.trainer",
+      "target": "src.data.collectors.data_collector"
+    },
+    {
+      "source": "src.training.trainers.trainer",
+      "target": "src.core.detection.detector"
+    },
+    {
+      "source": "src.training.trainers.enhanced_trainer",
+      "target": "src.training.trainers.trainer"
+    },
+    {
+      "source": "src.training.trainers.enhanced_trainer",
+      "target": "src.integrations.gemini.llm_analyzer"
+    },
+    {
+      "source": "src.training.trainers.enhanced_trainer",
+      "target": "src.data.collectors.data_collector"
+    },
+    {
+      "source": "src.training.validators.validator",
+      "target": "src.data.collectors.data_collector"
+    },
+    {
+      "source": "src.training.validators.validator",
+      "target": "src.training.trainers.trainer"
+    },
+    {
+      "source": "src.training.validators.validator",
+      "target": "src.core.detection.detector"
+    },
+    {
+      "source": "src.utils.api_utils",
+      "target": "src.utils.common"
+    },
+    {
+      "source": "src.utils",
+      "target": "src.utils.common"
+    },
+    {
+      "source": "src.utils",
+      "target": "src.utils.ml_utils"
+    },
+    {
+      "source": "src.utils",
+      "target": "src.utils.api_utils"
+    },
+    {
+      "source": "src.utils",
+      "target": "src.utils.extension_utils"
+    },
+    {
+      "source": "tests.performance.benchmarks",
+      "target": "src.core.detection.detector"
+    },
+    {
+      "source": "tests.performance.benchmarks",
+      "target": "src.core.api_client.unified_client"
+    },
+    {
+      "source": "tests.performance.benchmarks",
+      "target": "src.core.interfaces.data_interfaces"
+    },
+    {
+      "source": "tests.performance.benchmarks",
+      "target": "src.core.interfaces.api_interfaces"
+    },
+    {
+      "source": "tests.performance.benchmarks",
+      "target": "src.core.api_client.queue_manager"
+    },
+    {
+      "source": "tests.python.conftest",
+      "target": "src.core.interfaces.detector_interfaces"
+    },
+    {
+      "source": "tests.python.conftest",
+      "target": "src.core.interfaces.data_interfaces"
+    },
+    {
+      "source": "tests.python.conftest",
+      "target": "src.core.messaging.protocol"
+    }
+  ]
+}
