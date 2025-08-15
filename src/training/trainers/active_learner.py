@@ -263,6 +263,28 @@ class ActiveLearner:
         """
         Interactive session for active learning with suggestions
         """
+        self._print_session_header()
+        
+        if not candidate_pool:
+            candidate_pool = self._get_candidate_pool()
+        
+        while True:
+            try:
+                command = input("\n> ").strip()
+                
+                if self._should_exit(command):
+                    break
+                
+                self._process_command(command, candidate_pool)
+                
+            except KeyboardInterrupt:
+                print("\nSession interrupted. Goodbye!")
+                break
+            except Exception as e:
+                print(f"Error: {e}")
+    
+    def _print_session_header(self):
+        """Print interactive session header"""
         print("\n" + "="*80)
         print("ACTIVE LEARNING SESSION")
         print("="*80)
@@ -276,99 +298,126 @@ class ActiveLearner:
         print("  save            - Save current dataset")
         print("  quit            - Exit session")
         print("="*80)
+    
+    def _should_exit(self, command: str) -> bool:
+        """Check if command indicates session should exit"""
+        return command.lower() in ['quit', 'exit', 'q']
+    
+    def _process_command(self, command: str, candidate_pool: List[str]):
+        """Process a single command"""
+        if command.startswith('suggest'):
+            self._handle_suggest_command(command, candidate_pool)
+        elif command.startswith('label'):
+            self._handle_label_command(command)
+        elif command == 'stats':
+            self._handle_stats_command()
+        elif command.startswith('generate'):
+            self._handle_generate_command(command)
+        elif command == 'retrain':
+            self._handle_retrain_command()
+        elif command == 'save':
+            self._handle_save_command()
+        else:
+            print("Unknown command. Type 'quit' to exit or see available commands above.")
+    
+    def _handle_suggest_command(self, command: str, candidate_pool: List[str]):
+        """Handle suggest command"""
+        parts = command.split()
+        n = int(parts[1]) if len(parts) > 1 else 5
         
-        if not candidate_pool:
-            candidate_pool = self._get_candidate_pool()
+        if not self._ensure_model_ready():
+            return
         
-        while True:
+        suggestions = self.suggest_next_samples(candidate_pool, 'mixed', n)
+        self._process_suggestions(suggestions)
+    
+    def _ensure_model_ready(self) -> bool:
+        """Ensure model is ready for predictions"""
+        if not self.current_model:
             try:
-                command = input("\n> ").strip()
-                
-                if command.lower() in ['quit', 'exit', 'q']:
-                    break
-                
-                elif command.startswith('suggest'):
-                    parts = command.split()
-                    n = int(parts[1]) if len(parts) > 1 else 5
-                    
-                    if not self.current_model:
-                        try:
-                            self.train_initial_model()
-                        except ValueError as e:
-                            print(f"Error: {e}")
-                            print("Need more labeled data to make suggestions.")
-                            continue
-                    
-                    suggestions = self.suggest_next_samples(candidate_pool, 'mixed', n)
-                    
-                    print(f"\n🎯 Top {len(suggestions)} suggestions to label:")
-                    for i, sug in enumerate(suggestions, 1):
-                        print(f"\n{i}. [{sug['strategy'].upper()}] {sug['reason']}")
-                        print(f"   Text: {sug['text'][:100]}...")
-                        
-                        # Quick labeling option
-                        label = input(f"   Label as (g)pt4o, (h)uman, or (s)kip? ").strip().lower()
-                        if label in ['g', 'gpt4o']:
-                            self.data_collector.add_sample(sug['text'], 'gpt4o', source='active_learning')
-                            print("   ✅ Labeled as GPT-4o")
-                        elif label in ['h', 'human']:
-                            self.data_collector.add_sample(sug['text'], 'human', source='active_learning')
-                            print("   ✅ Labeled as Human")
-                        else:
-                            print("   ⏭️  Skipped")
-                
-                elif command.startswith('label '):
-                    text = command[6:].strip()
-                    if text:
-                        label = input(f"Label '{text[:50]}...' as (g)pt4o or (h)uman? ").strip().lower()
-                        if label in ['g', 'gpt4o']:
-                            self.data_collector.add_sample(text, 'gpt4o', source='manual')
-                            print("✅ Labeled as GPT-4o")
-                        elif label in ['h', 'human']:
-                            self.data_collector.add_sample(text, 'human', source='manual')
-                            print("✅ Labeled as Human")
-                
-                elif command.startswith('generate'):
-                    parts = command.split()
-                    n = int(parts[1]) if len(parts) > 1 else 10
-                    
-                    try:
-                        self.generate_gpt4o_samples(n)
-                        print(f"✅ Generated {n} GPT-4o samples")
-                    except ValueError as e:
-                        print(f"Error: {e}")
-                        print("Set OPENAI_API_KEY environment variable to generate samples")
-                
-                elif command.lower() == 'stats':
-                    stats = self.data_collector.get_statistics()
-                    print(f"\n📊 Dataset Statistics:")
-                    print(f"  Total samples: {stats['total_samples']}")
-                    print(f"  GPT-4o samples: {stats['gpt4o_samples']}")
-                    print(f"  Human samples: {stats['human_samples']}")
-                    if stats['total_samples'] > 0:
-                        print(f"  Balance ratio: {stats['balance_ratio']:.2f}")
-                        print(f"  Sources: {', '.join(stats['sources'])}")
-                
-                elif command.lower() == 'retrain':
-                    try:
-                        self.train_initial_model()
-                        print("✅ Model retrained with latest data")
-                    except ValueError as e:
-                        print(f"Error: {e}")
-                
-                elif command.lower() == 'save':
-                    self.data_collector.save_dataset()
-                
-                else:
-                    print("Unknown command. Type 'quit' to exit.")
-                    
-            except KeyboardInterrupt:
-                break
-            except Exception as e:
+                self.train_initial_model()
+                return True
+            except ValueError as e:
                 print(f"Error: {e}")
+                print("Need more labeled data to make suggestions.")
+                return False
+        return True
+    
+    def _process_suggestions(self, suggestions: List[Dict]):
+        """Process and display suggestions for labeling"""
+        print(f"\nTop {len(suggestions)} suggestions to label:")
+        for i, sug in enumerate(suggestions, 1):
+            print(f"\n{i}. [{sug['strategy'].upper()}] {sug['reason']}")
+            print(f"   Text: {sug['text'][:100]}...")
+            
+            label = self._get_user_label()
+            if label:
+                self._add_labeled_sample(sug['text'], label)
+    
+    def _get_user_label(self) -> Optional[str]:
+        """Get label from user input"""
+        label = input(f"   Label as (g)pt4o, (h)uman, or (s)kip? ").strip().lower()
+        if label in ['g', 'gpt4o']:
+            return 'gpt4o'
+        elif label in ['h', 'human']:
+            return 'human'
+        return None
+    
+    def _add_labeled_sample(self, text: str, label: str):
+        """Add labeled sample to dataset"""
+        self.data_collector.add_sample(text, label, source='active_learning')
+        print(f"   ✅ Labeled as {label.title()}")
+    
+    def _handle_label_command(self, command: str):
+        """Handle manual label command"""
+        text = command[6:].strip()
+        if not text:
+            print("Please provide text to label: label <text>")
+            return
         
-        print("\nSaving dataset before exit...")
+        label = input(f"Label '{text[:50]}...' as (g)pt4o or (h)uman? ").strip().lower()
+        if label in ['g', 'gpt4o']:
+            self.data_collector.add_sample(text, 'gpt4o', source='manual')
+            print("✅ Labeled as GPT-4o")
+        elif label in ['h', 'human']:
+            self.data_collector.add_sample(text, 'human', source='manual')
+            print("✅ Labeled as Human")
+    
+    def _handle_stats_command(self):
+        """Handle stats command"""
+        stats = self.data_collector.get_statistics()
+        print(f"\n📊 Dataset Statistics:")
+        print(f"  Total samples: {stats['total_samples']}")
+        print(f"  GPT-4o samples: {stats['gpt4o_samples']}")
+        print(f"  Human samples: {stats['human_samples']}")
+        if stats['total_samples'] > 0:
+            print(f"  Balance ratio: {stats['balance_ratio']:.2f}")
+            print(f"  Sources: {', '.join(stats['sources'])}")
+    
+    def _handle_generate_command(self, command: str):
+        """Handle generate command"""
+        parts = command.split()
+        n = int(parts[1]) if len(parts) > 1 else 10
+        
+        try:
+            self.generate_gpt4o_samples(n)
+            print(f"✅ Generated {n} GPT-4o samples")
+        except ValueError as e:
+            print(f"Error: {e}")
+            print("Set OPENAI_API_KEY environment variable to generate samples")
+    
+    def _handle_retrain_command(self):
+        """Handle retrain command"""
+        try:
+            self.train_initial_model()
+            print("✅ Model retrained with latest data")
+        except ValueError as e:
+            print(f"Error: {e}")
+    
+    def _handle_save_command(self):
+        """Handle save command"""
         self.data_collector.save_dataset()
+        print("✅ Dataset saved")
     
     def _get_candidate_pool(self) -> List[str]:
         """Get a pool of candidate texts for labeling suggestions"""
