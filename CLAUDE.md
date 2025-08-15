@@ -1,24 +1,5 @@
 # Claude Code Instructions
 
-## 🎯 Implementation Roadmap
-
-**CRITICAL: Follow the comprehensive implementation roadmap for all development work**
-
-📍 **Roadmap Location**: `C:\Users\Kevin\ai_detector\IMPLEMENTATION_ROADMAP.md`
-
-### Roadmap Sections:
-1. **File & Directory Organization** - Optimal project structure
-2. **Code Architecture** - Design patterns and best practices  
-3. **Consolidation** - Removing duplication and redundancy
-4. **Integration** - Module communication and APIs
-5. **Test Coverage** - Unit, integration, E2E, and performance tests
-
-### Before Starting Any Task:
-1. Review the relevant section in IMPLEMENTATION_ROADMAP.md
-2. Check dependencies and prerequisites
-3. Follow the defined patterns and standards
-4. Update progress in the roadmap
-
 ## Git Workflow
 
 **IMPORTANT: Upon completion of each task OR each phase, you MUST:**
@@ -52,21 +33,21 @@
    2. Add the remote: `git remote add origin https://github.com/username/repo-name.git`
    3. Push: `git push -u origin main`
 
-## Phase Management
+## Development Guidelines
 
-**CONTINUOUS IMPLEMENTATION: When a phase completes, automatically proceed to the next phase without prompting. Execute the entire implementation roadmap/todo list straight through.**
+**IMPORTANT: Maintain high code quality and follow established patterns**
 
-### Phase Completion Actions:
-1. **Commit and push all phase changes**
-2. **Update phase status in IMPLEMENTATION_ROADMAP.md**  
-3. **Automatically begin next phase immediately**
-4. **Continue until entire roadmap is complete**
+### Code Quality Standards:
+1. **Keep code duplication below 5%**
+2. **Maintain cyclomatic complexity below 10 per function**  
+3. **Ensure low coupling between modules**
+4. **Follow established architecture patterns**
 
-### No Prompting Between Phases:
-- Do NOT ask for permission to continue to next phase
-- Do NOT wait for user confirmation between phases
-- Execute the full roadmap continuously and systematically
-- Only stop if critical errors occur or roadmap is complete
+### Continuous Quality:
+- Run quality analysis tools before major changes
+- Maintain comprehensive test coverage
+- Follow single responsibility principle
+- Use dependency injection and established patterns
 
 ### Example Workflow
 
