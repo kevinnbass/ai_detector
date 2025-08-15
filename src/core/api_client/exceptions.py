@@ -192,100 +192,163 @@ class RetryExhaustedError(APIClientError):
 def create_error_from_response(response: Any, request_id: Optional[str] = None) -> APIClientError:
     """Create appropriate error from HTTP response"""
     
-    if hasattr(response, 'status_code'):
-        status_code = response.status_code
-        
-        try:
-            response_data = response.json() if hasattr(response, 'json') else None
-        except:
-            response_data = response.text if hasattr(response, 'text') else None
-        
-        # Determine error type based on status code
-        if status_code == 400:
-            return ValidationError(
-                message="Bad Request",
-                status_code=status_code,
-                response_data=response_data,
-                request_id=request_id
-            )
-        elif status_code == 401:
-            return AuthenticationError(
-                message="Unauthorized",
-                status_code=status_code,
-                response_data=response_data,
-                request_id=request_id
-            )
-        elif status_code == 403:
-            return AuthenticationError(
-                message="Forbidden",
-                status_code=status_code,
-                response_data=response_data,
-                request_id=request_id
-            )
-        elif status_code == 404:
-            return APIClientError(
-                message="Not Found",
-                status_code=status_code,
-                response_data=response_data,
-                request_id=request_id
-            )
-        elif status_code == 408:
-            return TimeoutError(
-                message="Request Timeout",
-                status_code=status_code,
-                response_data=response_data,
-                request_id=request_id
-            )
-        elif status_code == 422:
-            validation_errors = []
-            if response_data and isinstance(response_data, dict):
-                validation_errors = response_data.get("errors", [])
-            
-            return ValidationError(
-                message="Validation Error",
-                status_code=status_code,
-                response_data=response_data,
-                validation_errors=validation_errors,
-                request_id=request_id
-            )
-        elif status_code == 429:
-            retry_after = None
-            if hasattr(response, 'headers'):
-                retry_after = response.headers.get('Retry-After')
-                if retry_after:
-                    try:
-                        retry_after = int(retry_after)
-                    except ValueError:
-                        retry_after = None
-            
-            return RateLimitError(
-                message="Rate Limit Exceeded",
-                status_code=status_code,
-                response_data=response_data,
-                retry_after=retry_after,
-                request_id=request_id
-            )
-        elif 500 <= status_code < 600:
-            server_message = None
-            if response_data and isinstance(response_data, dict):
-                server_message = response_data.get("message") or response_data.get("error")
-            
-            return ServerError(
-                message=f"Server Error ({status_code})",
-                status_code=status_code,
-                response_data=response_data,
-                server_message=server_message,
-                request_id=request_id
-            )
-        else:
-            return APIClientError(
-                message=f"HTTP Error ({status_code})",
-                status_code=status_code,
-                response_data=response_data,
-                request_id=request_id
-            )
+    if not hasattr(response, 'status_code'):
+        return _create_generic_error(response, request_id)
     
-    # Generic error for responses without status codes
+    status_code = response.status_code
+    response_data = _extract_response_data(response)
+    
+    error_factory = _get_error_factory(status_code)
+    return error_factory(status_code, response_data, response, request_id)
+
+
+def _extract_response_data(response: Any) -> Any:
+    """Extract data from response object"""
+    try:
+        return response.json() if hasattr(response, 'json') else None
+    except:
+        return response.text if hasattr(response, 'text') else None
+
+
+def _get_error_factory(status_code: int):
+    """Get error factory function for status code"""
+    error_factories = {
+        400: _create_bad_request_error,
+        401: _create_unauthorized_error,
+        403: _create_forbidden_error,
+        404: _create_not_found_error,
+        408: _create_timeout_error,
+        422: _create_validation_error,
+        429: _create_rate_limit_error,
+    }
+    
+    if status_code in error_factories:
+        return error_factories[status_code]
+    elif 500 <= status_code < 600:
+        return _create_server_error
+    else:
+        return _create_client_error
+
+
+def _create_bad_request_error(status_code: int, response_data: Any, response: Any, request_id: Optional[str]) -> ValidationError:
+    """Create bad request error"""
+    return ValidationError(
+        message="Bad Request",
+        status_code=status_code,
+        response_data=response_data,
+        request_id=request_id
+    )
+
+
+def _create_unauthorized_error(status_code: int, response_data: Any, response: Any, request_id: Optional[str]) -> AuthenticationError:
+    """Create unauthorized error"""
+    return AuthenticationError(
+        message="Unauthorized",
+        status_code=status_code,
+        response_data=response_data,
+        request_id=request_id
+    )
+
+
+def _create_forbidden_error(status_code: int, response_data: Any, response: Any, request_id: Optional[str]) -> AuthenticationError:
+    """Create forbidden error"""
+    return AuthenticationError(
+        message="Forbidden",
+        status_code=status_code,
+        response_data=response_data,
+        request_id=request_id
+    )
+
+
+def _create_not_found_error(status_code: int, response_data: Any, response: Any, request_id: Optional[str]) -> APIClientError:
+    """Create not found error"""
+    return APIClientError(
+        message="Not Found",
+        status_code=status_code,
+        response_data=response_data,
+        request_id=request_id
+    )
+
+
+def _create_timeout_error(status_code: int, response_data: Any, response: Any, request_id: Optional[str]) -> TimeoutError:
+    """Create timeout error"""
+    return TimeoutError(
+        message="Request Timeout",
+        status_code=status_code,
+        response_data=response_data,
+        request_id=request_id
+    )
+
+
+def _create_validation_error(status_code: int, response_data: Any, response: Any, request_id: Optional[str]) -> ValidationError:
+    """Create validation error"""
+    validation_errors = []
+    if response_data and isinstance(response_data, dict):
+        validation_errors = response_data.get("errors", [])
+    
+    return ValidationError(
+        message="Validation Error",
+        status_code=status_code,
+        response_data=response_data,
+        validation_errors=validation_errors,
+        request_id=request_id
+    )
+
+
+def _create_rate_limit_error(status_code: int, response_data: Any, response: Any, request_id: Optional[str]) -> RateLimitError:
+    """Create rate limit error"""
+    retry_after = _extract_retry_after(response)
+    return RateLimitError(
+        message="Rate Limit Exceeded",
+        status_code=status_code,
+        response_data=response_data,
+        retry_after=retry_after,
+        request_id=request_id
+    )
+
+
+def _extract_retry_after(response: Any) -> Optional[int]:
+    """Extract retry-after value from response headers"""
+    if not hasattr(response, 'headers'):
+        return None
+    
+    retry_after = response.headers.get('Retry-After')
+    if not retry_after:
+        return None
+    
+    try:
+        return int(retry_after)
+    except ValueError:
+        return None
+
+
+def _create_server_error(status_code: int, response_data: Any, response: Any, request_id: Optional[str]) -> ServerError:
+    """Create server error"""
+    server_message = None
+    if response_data and isinstance(response_data, dict):
+        server_message = response_data.get("message") or response_data.get("error")
+    
+    return ServerError(
+        message=f"Server Error ({status_code})",
+        status_code=status_code,
+        response_data=response_data,
+        server_message=server_message,
+        request_id=request_id
+    )
+
+
+def _create_client_error(status_code: int, response_data: Any, response: Any, request_id: Optional[str]) -> APIClientError:
+    """Create generic client error"""
+    return APIClientError(
+        message=f"HTTP Error ({status_code})",
+        status_code=status_code,
+        response_data=response_data,
+        request_id=request_id
+    )
+
+
+def _create_generic_error(response: Any, request_id: Optional[str]) -> APIClientError:
+    """Create generic error for responses without status codes"""
     return APIClientError(
         message="Unknown API error",
         request_id=request_id
